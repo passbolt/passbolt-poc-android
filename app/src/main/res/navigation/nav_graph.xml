@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/milestonesFragment">
+
+  <fragment
+      android:id="@+id/milestonesFragment"
+      android:name="com.passbolt.poc.milestones.MilestonesFragment">
+    <action
+        android:id="@+id/action_milestonesFragment_to_encryptionFragment"
+        app:destination="@id/encryptionFragment" />
+  </fragment>
+
+  <fragment
+      android:id="@+id/encryptionFragment"
+      android:name="com.passbolt.poc.milestones.encryption.EncryptionFragment"
+      android:label="@string/milestone_encryption">
+    <action
+        android:id="@+id/action_encryptionFragment_to_encryptDecryptFragment"
+        app:destination="@id/encryptDecryptFragment" />
+    <action
+        android:id="@+id/action_encryptionFragment_to_signVerifyFragment"
+        app:destination="@id/signVerifyFragment" />
+  </fragment>
+
+  <fragment
+      android:id="@+id/encryptDecryptFragment"
+      android:name="com.passbolt.poc.milestones.encryption.encryptdecrypt.EncryptDecryptFragment"
+      android:label="@string/encryption_encrypt_decrypt" />
+
+  <fragment
+      android:id="@+id/signVerifyFragment"
+      android:name="com.passbolt.poc.milestones.encryption.signverify.SignVerifyFragment"
+      android:label="@string/encryption_sign_verify" />
+</navigation>

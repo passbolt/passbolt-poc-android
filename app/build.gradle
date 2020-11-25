@@ -44,5 +44,8 @@ dependencies {
   implementation deps.androidx.core
   implementation deps.androidx.appcompat
   implementation deps.androidx.constraintlayout
+  implementation deps.androidx.navigationfragment
+  implementation deps.androidx.navigationui
+  implementation deps.androidx.recyclerview
   implementation deps.material
 }

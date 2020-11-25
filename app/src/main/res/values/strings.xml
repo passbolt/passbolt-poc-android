@@ -1,3 +1,15 @@
 <resources>
   <string name="app_name">Passbolt POC</string>
+
+  <string name="not_implemented">Not implemented yet</string>
+
+  <!--  milestones -->
+  <string name="milestone_encryption">Encryption library POC</string>
+  <string name="milestone_setup">Setup POC</string>
+  <string name="milestone_secure_storage">Secure storage POC</string>
+  <string name="milestone_autofill">Autofill POC</string>
+
+  <!-- encryption milestone -->
+  <string name="encryption_encrypt_decrypt">Encrypt/Decrypt POC</string>
+  <string name="encryption_sign_verify">Sign/Verify POC</string>
 </resources>

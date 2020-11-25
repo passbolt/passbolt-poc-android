@@ -13,3 +13,7 @@
 .externalNativeBuild
 .cxx
 local.properties
+/.idea/caches/build_file_checksums.ser
+/.idea/vcs.xml
+.idea
+*.log
