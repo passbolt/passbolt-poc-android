@@ -44,7 +44,7 @@
         android:text="@string/encrypt"
         app:layout_constraintEnd_toStartOf="@+id/button_public_key"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/key_input"
+        app:layout_constraintTop_toBottomOf="@+id/password_input"
         />
     <Button
         android:id="@+id/button_decrypt"
@@ -55,7 +55,7 @@
         android:text="@string/decrypt"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/button_private_key"
-        app:layout_constraintTop_toBottomOf="@+id/key_input"
+        app:layout_constraintTop_toBottomOf="@+id/password_input"
         />
 
     <com.google.android.material.textfield.TextInputLayout
@@ -120,6 +120,25 @@
           android:layout_width="match_parent"
           android:layout_height="@dimen/result_edit_text_height"
           android:gravity="start"
+          />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/password_input"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/margin_small"
+        android:layout_marginTop="@dimen/margin_small"
+        android:hint="@string/password"
+        app:layout_constraintTop_toBottomOf="@+id/key_input"
+        app:endIconMode="clear_text"
+        app:expandedHintEnabled="false"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        >
+      <com.google.android.material.textfield.TextInputEditText
+          android:id="@+id/password_edit_text"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
           />
     </com.google.android.material.textfield.TextInputLayout>
   </androidx.constraintlayout.widget.ConstraintLayout>

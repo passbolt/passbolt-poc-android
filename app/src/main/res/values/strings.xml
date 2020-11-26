@@ -2,6 +2,9 @@
   <string name="app_name">Passbolt POC</string>
 
   <string name="not_implemented">Not implemented yet</string>
+  <string name="ok">Ok</string>
+  <string name="error">Error</string>
+  <string name="unknown_error">Unknown error</string>
 
   <!--  milestones -->
   <string name="milestone_encryption">Encryption library POC</string>
@@ -21,4 +24,5 @@
   <string name="key">Key</string>
   <string name="placeholder_key">Paste or enter a public or private gpg key or use one of the buttons to fill this field with a predefined public or private key.</string>
   <string name="result">Result</string>
+  <string name="password">Password</string>
 </resources>

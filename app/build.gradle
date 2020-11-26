@@ -41,6 +41,8 @@ android {
 }
 
 dependencies {
+  implementation(name: 'Gopenpgp', ext: 'aar')
+
   implementation deps.androidx.core
   implementation deps.androidx.appcompat
   implementation deps.androidx.constraintlayout
