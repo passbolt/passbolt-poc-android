@@ -12,22 +12,22 @@ import com.passbolt.poc.R
 class MilestonesFragment : ListFragment() {
 
   private val milestoneFeatures = listOf(
-      MilestoneFeature(
-          R.string.milestone_encryption,
-          R.id.action_milestonesFragment_to_encryptionFragment
-      ),
-      MilestoneFeature(
-          R.string.milestone_setup,
-          View.NO_ID
-      ),
-      MilestoneFeature(
-          R.string.milestone_secure_storage,
-          View.NO_ID
-      ),
-      MilestoneFeature(
-          R.string.milestone_autofill,
-          View.NO_ID
-      )
+    MilestoneFeature(
+      R.string.milestone_encryption,
+      R.id.action_milestonesFragment_to_encryptionFragment
+    ),
+    MilestoneFeature(
+      R.string.milestone_setup,
+      View.NO_ID
+    ),
+    MilestoneFeature(
+      R.string.milestone_secure_storage,
+      View.NO_ID
+    ),
+    MilestoneFeature(
+      R.string.milestone_autofill,
+      View.NO_ID
+    )
   )
 
   override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -48,10 +48,10 @@ class MilestonesFragment : ListFragment() {
     val actionId = milestoneFeatures[position].actionId
     if (actionId == View.NO_ID) {
       Toast.makeText(
-          requireContext(),
-          getString(R.string.not_implemented), Toast.LENGTH_SHORT
+        requireContext(),
+        getString(R.string.not_implemented), Toast.LENGTH_SHORT
       )
-          .show()
+        .show()
     } else {
       findNavController().navigate(actionId)
     }

@@ -12,4 +12,13 @@
   <!-- encryption milestone -->
   <string name="encryption_encrypt_decrypt">Encrypt/Decrypt POC</string>
   <string name="encryption_sign_verify">Sign/Verify POC</string>
+  <string name="private_key">Private key</string>
+  <string name="public_key">Public key</string>
+  <string name="encrypt">Encrypt</string>
+  <string name="decrypt">Decrypt</string>
+  <string name="message">Message</string>
+  <string name="placeholder_message">Paste or enter a message you want to encrypt or decrypt.</string>
+  <string name="key">Key</string>
+  <string name="placeholder_key">Paste or enter a public or private gpg key or use one of the buttons to fill this field with a predefined public or private key.</string>
+  <string name="result">Result</string>
 </resources>
