@@ -20,9 +20,15 @@
   <string name="encrypt">Encrypt</string>
   <string name="decrypt">Decrypt</string>
   <string name="message">Message</string>
-  <string name="placeholder_message">Paste or enter a message you want to encrypt or decrypt.</string>
+  <string name="placeholder_message_encrypt">Paste or enter a message you want to encrypt or decrypt.</string>
   <string name="key">Key</string>
   <string name="placeholder_key">Paste or enter a public or private gpg key or use one of the buttons to fill this field with a predefined public or private key.</string>
   <string name="result">Result</string>
   <string name="password">Password</string>
+
+  <!-- sign verify milestone -->
+  <string name="sign">Sign</string>
+  <string name="verify">Verify</string>
+  <string name="placeholder_message_sign">Paste or enter a message you want to sign or verify.</string>
+
 </resources>
