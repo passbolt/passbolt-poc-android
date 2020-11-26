@@ -24,8 +24,11 @@ class EncryptionFragment : ListFragment() {
       )
   )
 
-  override fun onActivityCreated(savedInstanceState: Bundle?) {
-    super.onActivityCreated(savedInstanceState)
+  override fun onViewCreated(
+    view: View,
+    savedInstanceState: Bundle?
+  ) {
+    super.onViewCreated(view, savedInstanceState)
     val featureNames = encryptionFeatures.map { getString(it.nameId) }
     listAdapter = ArrayAdapter(requireContext(), layout.simple_list_item_1, featureNames)
   }
