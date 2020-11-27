@@ -1,5 +1,6 @@
-package com.passbolt.poc.milestones
+package com.passbolt.poc.milestones.autofill
 
+import android.R.layout
 import android.os.Bundle
 import android.view.View
 import android.widget.ArrayAdapter
@@ -9,24 +10,16 @@ import androidx.fragment.app.ListFragment
 import androidx.navigation.fragment.findNavController
 import com.passbolt.poc.R
 
-class MilestonesFragment : ListFragment() {
+class AutofillFragment : ListFragment() {
 
-  private val milestoneFeatures = listOf(
-      MilestoneFeature(
-          R.string.milestone_encryption,
-          R.id.action_milestonesFragment_to_encryptionFragment
+  private val autofillFeatures = listOf(
+      AutofillFeature(
+          R.string.autofill_settings,
+          R.id.action_autofillFragment_to_autofillSettingsActivity
       ),
-      MilestoneFeature(
-          R.string.milestone_autofill,
-          R.id.action_milestonesFragment_to_autofillFragment
-      ),
-      MilestoneFeature(
-          R.string.milestone_setup,
-          View.NO_ID
-      ),
-      MilestoneFeature(
-          R.string.milestone_secure_storage,
-          View.NO_ID
+      AutofillFeature(
+          R.string.autofill_test,
+          R.id.action_autofillFragment_to_autofillTestFragment
       )
   )
 
@@ -35,10 +28,8 @@ class MilestonesFragment : ListFragment() {
     savedInstanceState: Bundle?
   ) {
     super.onViewCreated(view, savedInstanceState)
-
-    val milestoneNames = milestoneFeatures.map { getString(it.nameId) }
-    listAdapter =
-      ArrayAdapter(requireContext(), android.R.layout.simple_list_item_1, milestoneNames)
+    val featureNames = autofillFeatures.map { getString(it.nameId) }
+    listAdapter = ArrayAdapter(requireContext(), layout.simple_list_item_1, featureNames)
   }
 
   override fun onListItemClick(
@@ -48,7 +39,7 @@ class MilestonesFragment : ListFragment() {
     id: Long
   ) {
     super.onListItemClick(l, v, position, id)
-    val actionId = milestoneFeatures[position].actionId
+    val actionId = autofillFeatures[position].actionId
     if (actionId == View.NO_ID) {
       Toast.makeText(
           requireContext(),

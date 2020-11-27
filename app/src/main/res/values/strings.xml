@@ -3,6 +3,7 @@
 
   <string name="not_implemented">Not implemented yet</string>
   <string name="ok">Ok</string>
+  <string name="info">Info</string>
   <string name="error">Error</string>
   <string name="unknown_error">Unknown error</string>
 
@@ -31,4 +32,12 @@
   <string name="verify">Verify</string>
   <string name="placeholder_message_sign">Paste or enter a message you want to sign or verify.</string>
 
+  <!-- autofill milestone -->
+  <string name="autofill">Autofill POC</string>
+  <string name="autofill_test">Autofill test</string>
+  <string name="autofill_settings">Autofill settings</string>
+  <string name="autofill_not_supported">This device doesn\'t support auto fill</string>
+  <string name="autofill_already_enabled">This auto fill service is already enabled</string>
+  <string name="autofill_enable">Enable autofill</string>
+  <string name="autofill_service">Passbolt POC Autofill Service</string>
 </resources>

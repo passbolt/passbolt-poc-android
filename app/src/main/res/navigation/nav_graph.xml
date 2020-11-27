@@ -4,13 +4,10 @@
     android:id="@+id/nav_graph"
     app:startDestination="@id/milestonesFragment">
 
-  <fragment
-      android:id="@+id/milestonesFragment"
-      android:name="com.passbolt.poc.milestones.MilestonesFragment">
-    <action
-        android:id="@+id/action_milestonesFragment_to_encryptionFragment"
-        app:destination="@id/encryptionFragment" />
-  </fragment>
+  <activity
+      android:id="@+id/autofillSettingsActivity"
+      android:name="com.passbolt.poc.milestones.autofill.settings.AutofillSettingsActivity"
+      android:label="@string/autofill_settings" />
 
   <fragment
       android:id="@+id/encryptionFragment"
@@ -33,4 +30,32 @@
       android:id="@+id/signVerifyFragment"
       android:name="com.passbolt.poc.milestones.encryption.signverify.SignVerifyFragment"
       android:label="@string/encryption_sign_verify" />
+
+  <fragment
+      android:id="@+id/autofillFragment"
+      android:name="com.passbolt.poc.milestones.autofill.AutofillFragment"
+      android:label="@string/autofill">
+    <action
+        android:id="@+id/action_autofillFragment_to_autofillTestFragment"
+        app:destination="@id/autofillTestFragment" />
+    <action
+        android:id="@+id/action_autofillFragment_to_autofillSettingsActivity"
+        app:destination="@id/autofillSettingsActivity" />
+  </fragment>
+
+  <fragment
+      android:id="@+id/autofillTestFragment"
+      android:name="com.passbolt.poc.milestones.autofill.test.AutofillTestFragment"
+      android:label="@string/autofill_test" />
+
+  <fragment
+      android:id="@+id/milestonesFragment"
+      android:name="com.passbolt.poc.milestones.MilestonesFragment">
+    <action
+        android:id="@+id/action_milestonesFragment_to_encryptionFragment"
+        app:destination="@id/encryptionFragment" />
+    <action
+        android:id="@+id/action_milestonesFragment_to_autofillFragment"
+        app:destination="@id/autofillFragment" />
+  </fragment>
 </navigation>
