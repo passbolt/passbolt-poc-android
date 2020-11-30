@@ -6,6 +6,10 @@
   <string name="info">Info</string>
   <string name="error">Error</string>
   <string name="unknown_error">Unknown error</string>
+  <string name="password">Password</string>
+  <string name="username">Username</string>
+  <string name="clear">Clear</string>
+  <string name="login">Login</string>
 
   <!--  milestones -->
   <string name="milestone_encryption">Encryption library POC</string>
@@ -25,7 +29,6 @@
   <string name="key">Key</string>
   <string name="placeholder_key">Paste or enter a public or private gpg key or use one of the buttons to fill this field with a predefined public or private key.</string>
   <string name="result">Result</string>
-  <string name="password">Password</string>
 
   <!-- sign verify milestone -->
   <string name="sign">Sign</string>
@@ -40,4 +43,7 @@
   <string name="autofill_already_enabled">This auto fill service is already enabled</string>
   <string name="autofill_enable">Enable autofill</string>
   <string name="autofill_service">Passbolt POC Autofill Service</string>
+  <string name="autofill_edittext_header">Sample Login Using EditTexts</string>
+  <string name="autofill_webview_header">Sample Login Using WebView</string>
+
 </resources>
