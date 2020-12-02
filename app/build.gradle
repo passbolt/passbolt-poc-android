@@ -49,5 +49,6 @@ dependencies {
   implementation deps.androidx.navigationfragment
   implementation deps.androidx.navigationui
   implementation deps.androidx.recyclerview
+  implementation deps.androidx.biometric
   implementation deps.material
 }

@@ -46,4 +46,7 @@
   <string name="autofill_edittext_header">Sample Login Using EditTexts</string>
   <string name="autofill_webview_header">Sample Login Using WebView</string>
 
+  <string name="biometric_prompt_title">Biometric login for Passbolt POC app</string>
+  <string name="biometric_prompt_subtitle">Log in using your biometric credential or use PIN</string>
+
 </resources>

@@ -46,7 +46,24 @@
   <fragment
       android:id="@+id/autofillTestFragment"
       android:name="com.passbolt.poc.milestones.autofill.test.AutofillTestFragment"
-      android:label="@string/autofill_test" />
+      android:label="@string/autofill_test">
+    <action
+        android:id="@+id/action_autofillTestFragment_to_autofillWebViewTestFragment"
+        app:destination="@id/autofillWebViewTestFragment" />
+    <action
+        android:id="@+id/action_autofillTestFragment_to_autofillEditTextTestFragment"
+        app:destination="@id/autofillEditTextTestFragment" />
+  </fragment>
+
+  <fragment
+      android:id="@+id/autofillEditTextTestFragment"
+      android:name="com.passbolt.poc.milestones.autofill.test.edittext.AutofillEditTextTestFragment"
+      android:label="@string/autofill_edittext_header" />
+
+  <fragment
+      android:id="@+id/autofillWebViewTestFragment"
+      android:name="com.passbolt.poc.milestones.autofill.test.webview.AutofillWebViewTestFragment"
+      android:label="@string/autofill_webview_header" />
 
   <fragment
       android:id="@+id/milestonesFragment"

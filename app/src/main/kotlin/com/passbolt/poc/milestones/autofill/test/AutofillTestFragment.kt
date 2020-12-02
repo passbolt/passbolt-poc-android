@@ -1,70 +1,54 @@
 package com.passbolt.poc.milestones.autofill.test
 
-import android.annotation.SuppressLint
+import android.R.layout
 import android.os.Bundle
 import android.view.View
-import android.view.autofill.AutofillManager
-import android.webkit.WebView
-import android.webkit.WebViewClient
-import android.widget.Button
-import android.widget.EditText
+import android.widget.ArrayAdapter
+import android.widget.ListView
 import android.widget.Toast
-import androidx.fragment.app.Fragment
+import androidx.fragment.app.ListFragment
+import androidx.navigation.fragment.findNavController
 import com.passbolt.poc.R
+import com.passbolt.poc.R.string
 
-class AutofillTestFragment : Fragment(R.layout.fragment_autofill_test) {
+class AutofillTestFragment : ListFragment() {
+
+  private val autofillTestFeatures = listOf(
+      AutofillTestFeature(
+          string.autofill_edittext_header,
+          R.id.action_autofillTestFragment_to_autofillEditTextTestFragment
+      ),
+      AutofillTestFeature(
+          string.autofill_webview_header,
+          R.id.action_autofillTestFragment_to_autofillWebViewTestFragment
+      )
+  )
 
   override fun onViewCreated(
     view: View,
     savedInstanceState: Bundle?
   ) {
     super.onViewCreated(view, savedInstanceState)
-    setupEditText(view)
-    setupWebView(view.findViewById(R.id.webview))
+    val featureNames = autofillTestFeatures.map { getString(it.nameId) }
+    listAdapter = ArrayAdapter(requireContext(), layout.simple_list_item_1, featureNames)
   }
 
-  private fun setupEditText(view: View) {
-    val usernameEditText = view.findViewById<EditText>(R.id.username_edit_text)
-    val passwordEditText = view.findViewById<EditText>(R.id.password_edit_text)
-
-    view.findViewById<Button>(R.id.button_login)
-        .setOnClickListener {
-          val username = usernameEditText.text.toString()
-          val password = passwordEditText.text.toString()
-          if (isValidCredentials(username, password)) {
-            Toast.makeText(requireContext(), "Authentication success.", Toast.LENGTH_SHORT)
-                .show()
-          } else {
-            Toast.makeText(requireContext(), "Authentication failed.", Toast.LENGTH_SHORT)
-                .show()
-          }
-        }
-    view.findViewById<Button>(R.id.button_clear)
-        .setOnClickListener {
-          requireContext().getSystemService(AutofillManager::class.java)
-              .cancel()
-          usernameEditText.text.clear()
-          passwordEditText.text.clear()
-        }
-  }
-
-  @SuppressLint("SetJavaScriptEnabled")
-  private fun setupWebView(webView: WebView) {
-    webView.apply {
-      webViewClient = WebViewClient()
-      settings.javaScriptEnabled = true
-
-      clearHistory()
-      clearFormData()
-      clearCache(true)
-      loadUrl("file:///android_res/raw/webview_sample.html")
+  override fun onListItemClick(
+    l: ListView,
+    v: View,
+    position: Int,
+    id: Long
+  ) {
+    super.onListItemClick(l, v, position, id)
+    val actionId = autofillTestFeatures[position].actionId
+    if (actionId == View.NO_ID) {
+      Toast.makeText(
+          requireContext(),
+          getString(R.string.not_implemented), Toast.LENGTH_SHORT
+      )
+          .show()
+    } else {
+      findNavController().navigate(actionId)
     }
-  }
-
-  private fun isValidCredentials(
-    username: String?,
-    password: String?
-  ): Boolean {
-    return username != null && password != null && username.equals(password, ignoreCase = true)
   }
 }
