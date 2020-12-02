@@ -1,10 +1,12 @@
 package com.passbolt.poc.milestones.encryption.signverify
 
 import android.os.Bundle
+import android.os.SystemClock
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.RadioButton
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.passbolt.poc.R
@@ -56,7 +58,13 @@ class SignVerifyFragment : Fragment(R.layout.fragment_sign_verify) {
             val key = keyEditText.text.toString()
             val password = passwordEditText.text.toString()
                 .toByteArray()
+            val start = SystemClock.uptimeMillis()
             val signed = Helper.signCleartextMessageArmored(key, password, message)
+            val elapsed = SystemClock.uptimeMillis() - start
+            Toast.makeText(
+                requireContext(), getString(R.string.operation_time, elapsed), Toast.LENGTH_SHORT
+            )
+                .show()
             resultEditText.setText(signed)
           } catch (e: Exception) {
             showError(e.message)
@@ -68,7 +76,13 @@ class SignVerifyFragment : Fragment(R.layout.fragment_sign_verify) {
           try {
             val message = messageEditText.text.toString()
             val key = keyEditText.text.toString()
+            val start = SystemClock.uptimeMillis()
             val verified = Helper.verifyCleartextMessageArmored(key, message, Crypto.getUnixTime())
+            val elapsed = SystemClock.uptimeMillis() - start
+            Toast.makeText(
+                requireContext(), getString(R.string.operation_time, elapsed), Toast.LENGTH_SHORT
+            )
+                .show()
             resultEditText.setText(verified)
           } catch (e: Exception) {
             showError(e.message)

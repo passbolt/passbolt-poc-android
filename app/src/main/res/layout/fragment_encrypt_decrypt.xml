@@ -16,11 +16,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/margin_small"
-        android:layout_marginTop="@dimen/margin_big"
+        android:layout_marginTop="@dimen/margin_small"
         android:text="@string/private_key"
         app:layout_constraintEnd_toStartOf="@+id/button_public_key"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/message_input"
+        app:layout_constraintTop_toBottomOf="@+id/keys_info_text_view"
         />
 
     <Button
@@ -28,11 +28,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/margin_small"
-        android:layout_marginTop="@dimen/margin_big"
+        android:layout_marginTop="@dimen/margin_small"
         android:text="@string/public_key"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/button_private_key"
-        app:layout_constraintTop_toBottomOf="@+id/message_input"
+        app:layout_constraintTop_toBottomOf="@+id/keys_info_text_view"
         />
 
     <Button
@@ -46,6 +46,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/password_input"
         />
+
     <Button
         android:id="@+id/button_decrypt"
         android:layout_width="wrap_content"
@@ -56,6 +57,18 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/button_private_key"
         app:layout_constraintTop_toBottomOf="@+id/password_input"
+        />
+    <TextView
+        android:id="@+id/keys_info_text_view"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/margin_small"
+        android:layout_marginTop="@dimen/margin_big"
+        android:text="@string/keys_info"
+        android:textAlignment="center"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/message_input"
         />
 
     <com.google.android.material.textfield.TextInputLayout

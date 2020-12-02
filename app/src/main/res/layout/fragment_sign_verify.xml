@@ -58,14 +58,15 @@
         app:layout_constraintStart_toEndOf="@+id/button_private_key"
         app:layout_constraintTop_toBottomOf="@+id/password_input"
         />
+
     <RadioGroup
         android:id="@+id/key_group"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_big"
+        android:layout_marginTop="@dimen/margin_small"
         android:gravity="center"
         android:orientation="horizontal"
-        app:layout_constraintTop_toBottomOf="@+id/message_input"
+        app:layout_constraintTop_toBottomOf="@+id/keys_info_text_view"
         >
       <RadioButton
           android:id="@+id/radio_key1"
@@ -83,6 +84,18 @@
           android:text="Use Key 2"
           />
     </RadioGroup>
+    <TextView
+        android:id="@+id/keys_info_text_view"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/margin_small"
+        android:layout_marginTop="@dimen/margin_big"
+        android:text="@string/keys_info"
+        android:textAlignment="center"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/message_input"
+        />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/message_input"

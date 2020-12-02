@@ -10,6 +10,7 @@
   <string name="username">Username</string>
   <string name="clear">Clear</string>
   <string name="login">Login</string>
+  <string name="operation_time">Operation took %1$d milliseconds</string>
 
   <!--  milestones -->
   <string name="milestone_encryption">Encryption library POC</string>
@@ -29,6 +30,7 @@
   <string name="key">Key</string>
   <string name="placeholder_key">Paste or enter a public or private gpg key or use one of the buttons to fill this field with a predefined public or private key.</string>
   <string name="result">Result</string>
+  <string name="keys_info">The keys are rsa3072 keys and were generated using gpg tool on MacOS.</string>
 
   <!-- sign verify milestone -->
   <string name="sign">Sign</string>
