@@ -13,10 +13,10 @@ import android.view.autofill.AutofillValue
 import android.widget.RemoteViews
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.biometric.BiometricManager.Authenticators.BIOMETRIC_STRONG
-import androidx.biometric.BiometricManager.Authenticators.DEVICE_CREDENTIAL
-import androidx.biometric.BiometricPrompt
-import androidx.core.content.ContextCompat
+import androidx.biometric.BiometricPrompt.AuthenticationResult
+import androidx.biometric.auth.AuthPromptCallback
+import androidx.biometric.auth.startClass3BiometricOrCredentialAuthentication
+import androidx.fragment.app.FragmentActivity
 import com.passbolt.poc.R.string
 import com.passbolt.poc.milestones.autofill.parse.AssistStructureParser
 import com.passbolt.poc.milestones.autofill.parse.ParsedAssistStructure
@@ -26,20 +26,17 @@ class AutofillAuthActivity : AppCompatActivity() {
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
 
-    val info = BiometricPrompt.PromptInfo.Builder()
-        .setTitle(getString(string.biometric_prompt_title))
-        .setSubtitle(getString(string.biometric_prompt_subtitle))
-        .setAllowedAuthenticators(BIOMETRIC_STRONG or DEVICE_CREDENTIAL)
-        .build()
-
-    val prompt = BiometricPrompt(
-        this, ContextCompat.getMainExecutor(this),
-        object : BiometricPrompt.AuthenticationCallback() {
+    startClass3BiometricOrCredentialAuthentication(
+        null,
+        getString(string.biometric_prompt_title),
+        getString(string.biometric_prompt_subtitle),
+        callback = object : AuthPromptCallback() {
           override fun onAuthenticationError(
+            activity: FragmentActivity?,
             errorCode: Int,
             errString: CharSequence
           ) {
-            super.onAuthenticationError(errorCode, errString)
+            super.onAuthenticationError(activity, errorCode, errString)
             Toast.makeText(
                 applicationContext,
                 "Authentication error: $errString", Toast.LENGTH_SHORT
@@ -49,16 +46,16 @@ class AutofillAuthActivity : AppCompatActivity() {
           }
 
           override fun onAuthenticationSucceeded(
-            result: BiometricPrompt.AuthenticationResult
+            activity: FragmentActivity?,
+            result: AuthenticationResult
           ) {
-            super.onAuthenticationSucceeded(result)
-
+            super.onAuthenticationSucceeded(activity, result)
             fillRequest()
             finish()
           }
 
-          override fun onAuthenticationFailed() {
-            super.onAuthenticationFailed()
+          override fun onAuthenticationFailed(activity: FragmentActivity?) {
+            super.onAuthenticationFailed(activity)
             Toast.makeText(
                 applicationContext, "Authentication failed",
                 Toast.LENGTH_SHORT
@@ -67,8 +64,6 @@ class AutofillAuthActivity : AppCompatActivity() {
           }
         }
     )
-
-    prompt.authenticate(info)
   }
 
   private fun fillRequest() {
