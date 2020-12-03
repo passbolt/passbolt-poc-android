@@ -20,6 +20,8 @@ import androidx.fragment.app.FragmentActivity
 import com.passbolt.poc.R.string
 import com.passbolt.poc.milestones.autofill.parse.AssistStructureParser
 import com.passbolt.poc.milestones.autofill.parse.ParsedAssistStructure
+import com.passbolt.poc.util.Keys
+import helper.Helper
 
 class AutofillAuthActivity : AppCompatActivity() {
 
@@ -111,15 +113,21 @@ class AutofillAuthActivity : AppCompatActivity() {
     val usernamePresentation = preparePresentation("Encrypted username dataset")
     val passwordPresentation = preparePresentation("Encrypted password dataset")
 
+    val decryptedCredentials = Helper.decryptMessageArmored(
+        Keys.PRIVATE_KEY1,
+        Keys.PRIVATE_KEY1_PASSWORD.toByteArray(),
+        ENCRYPTED_CREDENTIALS
+    )
+
     val dataset = Dataset.Builder()
         .setValue(
             usernameParsedAssistStructure.id,
-            AutofillValue.forText("Decrypted credentials"),
+            AutofillValue.forText(decryptedCredentials),
             usernamePresentation
         )
         .setValue(
             passwordParsedAssistStructure.id,
-            AutofillValue.forText("Decrypted credentials"),
+            AutofillValue.forText(decryptedCredentials),
             passwordPresentation
         )
         .build()
@@ -135,5 +143,26 @@ class AutofillAuthActivity : AppCompatActivity() {
     return RemoteViews(packageName, layout.simple_list_item_1).apply {
       setTextViewText(android.R.id.text1, text)
     }
+  }
+
+  companion object {
+    private val ENCRYPTED_CREDENTIALS = """
+      -----BEGIN PGP MESSAGE-----
+      Version: GopenPGP 2.1.0
+      Comment: https://gopenpgp.org
+      
+      wcDMA3tBIduonoTEAQv+PvQmbRIdLCf0+pxStDJV/Jl2YfZsx1m2TlQZyMen/RoV
+      HRVWMEzd+nGx7bnVTSjxGtVWVXTEv+DO9bkzIfYIpz3+kzyGVTeauVMFd+DEyfyL
+      5ZW/eU010MeTzDSEKZT0xLq/CA4i+yHaAEc9XxGMSAJlZhH4dY4vXW+iwXMWxXAw
+      LWppFQBWjq3Ay3GKcck/fjRTmIEzTbpOVOet9Bm2MeJCfWsH6M1psZz1/CfNDNwn
+      orGNhjBKd4zHr3brQey0tmHNJ+cD2U1lZJSYBP6sAgWSaF8+V5Exnlb91ao/7/eX
+      COR/4HgYjnthVwOo+BskkSlMMcgqIeMcF609HjC39FdMuY+N8OLfHXFWRgXt3Mnd
+      32V5e96MyjNIL5lOowayL5oA1PYK/hBPgQeDR0P55S7eMU0af9B8xcdf2t8M2hA2
+      mcXqCfRL+vmKaOATeYtLiyzy5Ju7UL3eKJeZxEb0da1+xydUyaNDP0EBTMcs80+X
+      xxDa1h3f65or0fW3OV/c0kYBMOI//sh1z1i2ImmpF1EOHWrGcCcYTGS54qDSXDxZ
+      80XPPbF/Y4unb+AfekC+Zrk1GahNwILI9FVYz2Mmjip/eFW67QDu
+      =22NN
+      -----END PGP MESSAGE-----
+    """.trimIndent()
   }
 }
