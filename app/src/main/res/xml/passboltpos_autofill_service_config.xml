@@ -1,3 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <autofill-service xmlns:android="http://schemas.android.com/apk/res/android"
-    android:settingsActivity="com.passbolt.poc.milestones.autofill.settings.AutofillSettingsActivity" />
+    android:settingsActivity="com.passbolt.poc.milestones.autofill.settings.AutofillSettingsActivity">
+
+  <!-- passbolt poc sample app -->
+  <compatibility-package
+      android:name="com.passbolt.poc"
+      android:maxLongVersionCode="10000000000" />
+
+  <!-- well-known browswers, alphabetical order -->
+  <compatibility-package
+      android:name="com.android.chrome"
+      android:maxLongVersionCode="10000000000" />
+</autofill-service>

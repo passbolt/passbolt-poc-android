@@ -9,16 +9,18 @@ import android.widget.Toast
 import androidx.fragment.app.ListFragment
 import androidx.navigation.fragment.findNavController
 import com.passbolt.poc.R
+import com.passbolt.poc.R.string
+import com.passbolt.poc.util.FeatureElement
 
 class AutofillFragment : ListFragment() {
 
   private val autofillFeatures = listOf(
-      AutofillFeature(
-          R.string.autofill_settings,
+      FeatureElement(
+          string.autofill_settings,
           R.id.action_autofillFragment_to_autofillSettingsActivity
       ),
-      AutofillFeature(
-          R.string.autofill_test,
+      FeatureElement(
+          string.autofill_test,
           R.id.action_autofillFragment_to_autofillTestFragment
       )
   )
@@ -43,7 +45,7 @@ class AutofillFragment : ListFragment() {
     if (actionId == View.NO_ID) {
       Toast.makeText(
           requireContext(),
-          getString(R.string.not_implemented), Toast.LENGTH_SHORT
+          getString(string.not_implemented), Toast.LENGTH_SHORT
       )
           .show()
     } else {

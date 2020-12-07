@@ -21,6 +21,7 @@ import com.passbolt.poc.R.string
 import com.passbolt.poc.milestones.autofill.parse.AssistStructureParser
 import com.passbolt.poc.milestones.autofill.parse.ParsedAssistStructure
 import com.passbolt.poc.util.Keys
+import com.passbolt.poc.util.TrustedAppsInfo
 import helper.Helper
 
 class AutofillAuthActivity : AppCompatActivity() {
@@ -70,23 +71,15 @@ class AutofillAuthActivity : AppCompatActivity() {
 
   private fun fillRequest() {
     val structure = intent.getParcelableExtra<AssistStructure>(EXTRA_ASSIST_STRUCTURE)
+    val packageName = intent.getStringExtra(EXTRA_PACKAGE_NAME)
     if (structure == null) {
       setResult(RESULT_CANCELED)
       return
     }
 
-    val parser = AssistStructureParser(structure)
-
-    val parsedAssistStructures = parser.parse { node ->
-      val id = node.autofillId ?: return@parse null
-      val hints = node.autofillHints?.asList() ?: listOf()
-      if (hints.isEmpty()) {
-        return@parse null
-      }
-      val type = node.autofillType
-
-      ParsedAssistStructure(id, hints, type)
-    }
+    val assistStructureParsingResult = AssistStructureParser(structure).parse()
+    val parsedAssistStructures = assistStructureParsingResult.parsedAssistStructures
+    val webDomain = assistStructureParsingResult.webDomain
 
     // For the purpose of this POC we support filling only username and password
     val usernameParsedAssistStructure = parsedAssistStructures.firstOrNull { parsedStructure ->
@@ -110,27 +103,18 @@ class AutofillAuthActivity : AppCompatActivity() {
       return
     }
 
-    val usernamePresentation = preparePresentation("Encrypted username dataset")
-    val passwordPresentation = preparePresentation("Encrypted password dataset")
-
-    val decryptedCredentials = Helper.decryptMessageArmored(
-        Keys.PRIVATE_KEY1,
-        Keys.PRIVATE_KEY1_PASSWORD.toByteArray(),
-        ENCRYPTED_CREDENTIALS
-    )
-
-    val dataset = Dataset.Builder()
-        .setValue(
-            usernameParsedAssistStructure.id,
-            AutofillValue.forText(decryptedCredentials),
-            usernamePresentation
-        )
-        .setValue(
-            passwordParsedAssistStructure.id,
-            AutofillValue.forText(decryptedCredentials),
-            passwordPresentation
-        )
-        .build()
+    // Special handling for Instagram - POC imitates App Link verification
+    val dataset = if (packageName == TrustedAppsInfo.INSTAGRAM_PACKAGE ||
+        (
+            webDomain.isNotEmpty() && TrustedAppsInfo.INSTAGRAM_WEB_ADDRESS.contains(
+                webDomain, ignoreCase = true
+            )
+            )
+    ) {
+      getInstagramDataset(usernameParsedAssistStructure, passwordParsedAssistStructure)
+    } else {
+      getPOCDataset(usernameParsedAssistStructure, passwordParsedAssistStructure)
+    }
 
     val replyIntent = Intent().apply {
       putExtra(EXTRA_AUTHENTICATION_RESULT, dataset)
@@ -143,6 +127,54 @@ class AutofillAuthActivity : AppCompatActivity() {
     return RemoteViews(packageName, layout.simple_list_item_1).apply {
       setTextViewText(android.R.id.text1, text)
     }
+  }
+
+  private fun getInstagramDataset(
+    usernameParsedAssistStructure: ParsedAssistStructure,
+    passwordParsedAssistStructure: ParsedAssistStructure
+  ): Dataset {
+    val usernamePresentation = preparePresentation("Instagram username dataset")
+    val passwordPresentation = preparePresentation("Instagram password dataset")
+
+    return Dataset.Builder()
+        .setValue(
+            usernameParsedAssistStructure.id,
+            AutofillValue.forText("instagram username"),
+            usernamePresentation
+        )
+        .setValue(
+            passwordParsedAssistStructure.id,
+            AutofillValue.forText("instagram password"),
+            passwordPresentation
+        )
+        .build()
+  }
+
+  private fun getPOCDataset(
+    usernameParsedAssistStructure: ParsedAssistStructure,
+    passwordParsedAssistStructure: ParsedAssistStructure
+  ): Dataset {
+    val usernamePresentation = preparePresentation("Encrypted username dataset")
+    val passwordPresentation = preparePresentation("Encrypted password dataset")
+
+    val decryptedCredentials = Helper.decryptMessageArmored(
+        Keys.PRIVATE_KEY1,
+        Keys.PRIVATE_KEY1_PASSWORD.toByteArray(),
+        ENCRYPTED_CREDENTIALS
+    )
+
+    return Dataset.Builder()
+        .setValue(
+            usernameParsedAssistStructure.id,
+            AutofillValue.forText(decryptedCredentials),
+            usernamePresentation
+        )
+        .setValue(
+            passwordParsedAssistStructure.id,
+            AutofillValue.forText(decryptedCredentials),
+            passwordPresentation
+        )
+        .build()
   }
 
   companion object {
@@ -164,5 +196,7 @@ class AutofillAuthActivity : AppCompatActivity() {
       =22NN
       -----END PGP MESSAGE-----
     """.trimIndent()
+
+    const val EXTRA_PACKAGE_NAME = "EXTRA_PACKAGE_NAME"
   }
 }

@@ -8,23 +8,24 @@ import android.widget.Toast
 import androidx.fragment.app.ListFragment
 import androidx.navigation.fragment.findNavController
 import com.passbolt.poc.R
+import com.passbolt.poc.util.FeatureElement
 
 class MilestonesFragment : ListFragment() {
 
   private val milestoneFeatures = listOf(
-      MilestoneFeature(
+      FeatureElement(
           R.string.milestone_encryption,
           R.id.action_milestonesFragment_to_encryptionFragment
       ),
-      MilestoneFeature(
+      FeatureElement(
           R.string.milestone_autofill,
           R.id.action_milestonesFragment_to_autofillFragment
       ),
-      MilestoneFeature(
+      FeatureElement(
           R.string.milestone_setup,
           View.NO_ID
       ),
-      MilestoneFeature(
+      FeatureElement(
           R.string.milestone_secure_storage,
           View.NO_ID
       )

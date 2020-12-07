@@ -10,15 +10,16 @@ import androidx.fragment.app.ListFragment
 import androidx.navigation.fragment.findNavController
 import com.passbolt.poc.R
 import com.passbolt.poc.R.string
+import com.passbolt.poc.util.FeatureElement
 
 class EncryptionFragment : ListFragment() {
 
   private val encryptionFeatures = listOf(
-      EncryptionFeature(
+      FeatureElement(
           string.encryption_encrypt_decrypt,
           R.id.action_encryptionFragment_to_encryptDecryptFragment
       ),
-      EncryptionFeature(
+      FeatureElement(
           string.encryption_sign_verify,
           R.id.action_encryptionFragment_to_signVerifyFragment
       )
@@ -44,7 +45,7 @@ class EncryptionFragment : ListFragment() {
     if (actionId == View.NO_ID) {
       Toast.makeText(
           requireContext(),
-          getString(R.string.not_implemented), Toast.LENGTH_SHORT
+          getString(string.not_implemented), Toast.LENGTH_SHORT
       )
           .show()
     } else {

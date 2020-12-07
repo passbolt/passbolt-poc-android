@@ -10,15 +10,16 @@ import androidx.fragment.app.ListFragment
 import androidx.navigation.fragment.findNavController
 import com.passbolt.poc.R
 import com.passbolt.poc.R.string
+import com.passbolt.poc.util.FeatureElement
 
 class AutofillTestFragment : ListFragment() {
 
   private val autofillTestFeatures = listOf(
-      AutofillTestFeature(
+      FeatureElement(
           string.autofill_edittext_header,
           R.id.action_autofillTestFragment_to_autofillEditTextTestFragment
       ),
-      AutofillTestFeature(
+      FeatureElement(
           string.autofill_webview_header,
           R.id.action_autofillTestFragment_to_autofillWebViewTestFragment
       )
@@ -44,7 +45,7 @@ class AutofillTestFragment : ListFragment() {
     if (actionId == View.NO_ID) {
       Toast.makeText(
           requireContext(),
-          getString(R.string.not_implemented), Toast.LENGTH_SHORT
+          getString(string.not_implemented), Toast.LENGTH_SHORT
       )
           .show()
     } else {
