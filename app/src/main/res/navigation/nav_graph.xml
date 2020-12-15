@@ -74,5 +74,13 @@
     <action
         android:id="@+id/action_milestonesFragment_to_autofillFragment"
         app:destination="@id/autofillFragment" />
+    <action
+        android:id="@+id/action_milestonesFragment_to_securestorageFragment"
+        app:destination="@id/securestorageFragment" />
   </fragment>
+
+  <fragment
+      android:id="@+id/securestorageFragment"
+      android:name="com.passbolt.poc.milestones.securestorage.SecureStorageFragment"
+      android:label="@string/securestorage" />
 </navigation>

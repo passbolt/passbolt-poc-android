@@ -17,10 +17,11 @@ import androidx.biometric.BiometricPrompt.AuthenticationResult
 import androidx.biometric.auth.AuthPromptCallback
 import androidx.biometric.auth.startClass3BiometricOrCredentialAuthentication
 import androidx.fragment.app.FragmentActivity
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.passbolt.poc.R.string
 import com.passbolt.poc.milestones.autofill.parse.AssistStructureParser
 import com.passbolt.poc.milestones.autofill.parse.ParsedAssistStructure
-import com.passbolt.poc.util.Keys
+import com.passbolt.poc.util.EncryptedPreferences
 import com.passbolt.poc.util.TrustedAppsInfo
 import helper.Helper
 
@@ -53,8 +54,22 @@ class AutofillAuthActivity : AppCompatActivity() {
             result: AuthenticationResult
           ) {
             super.onAuthenticationSucceeded(activity, result)
-            fillRequest()
-            finish()
+            val keyAndPasswordPair = getKeyAndPasswordFromSecureStorage()
+
+            if (keyAndPasswordPair == null) {
+              showError(getString(string.securestorage_error_reading_from_storage))
+            } else {
+              val (privateKey, password) = keyAndPasswordPair
+
+              if (privateKey.isEmpty() || password.isEmpty()) {
+                showError(
+                    getString(string.autofill_key_not_present_in_secure_storage)
+                )
+              } else {
+                fillRequest(privateKey, password)
+                finish()
+              }
+            }
           }
 
           override fun onAuthenticationFailed(activity: FragmentActivity?) {
@@ -69,7 +84,22 @@ class AutofillAuthActivity : AppCompatActivity() {
     )
   }
 
-  private fun fillRequest() {
+  private fun getKeyAndPasswordFromSecureStorage(): Pair<String, String>? {
+    return try {
+      val encryptedPreferences = EncryptedPreferences(applicationContext)
+      Pair(
+          encryptedPreferences.getPrivateKey(),
+          encryptedPreferences.getPassword()
+      )
+    } catch (e: Exception) {
+      null
+    }
+  }
+
+  private fun fillRequest(
+    privateKey: String,
+    password: String
+  ) {
     val structure = intent.getParcelableExtra<AssistStructure>(EXTRA_ASSIST_STRUCTURE)
     val packageName = intent.getStringExtra(EXTRA_PACKAGE_NAME)
     if (structure == null) {
@@ -113,7 +143,12 @@ class AutofillAuthActivity : AppCompatActivity() {
     ) {
       getInstagramDataset(usernameParsedAssistStructure, passwordParsedAssistStructure)
     } else {
-      getPOCDataset(usernameParsedAssistStructure, passwordParsedAssistStructure)
+      getPOCDataset(
+          privateKey,
+          password,
+          usernameParsedAssistStructure,
+          passwordParsedAssistStructure
+      )
     }
 
     val replyIntent = Intent().apply {
@@ -151,15 +186,18 @@ class AutofillAuthActivity : AppCompatActivity() {
   }
 
   private fun getPOCDataset(
+    privateKey: String,
+    password: String,
     usernameParsedAssistStructure: ParsedAssistStructure,
     passwordParsedAssistStructure: ParsedAssistStructure
   ): Dataset {
+
     val usernamePresentation = preparePresentation("Encrypted username dataset")
     val passwordPresentation = preparePresentation("Encrypted password dataset")
 
     val decryptedCredentials = Helper.decryptMessageArmored(
-        Keys.PRIVATE_KEY1,
-        Keys.PRIVATE_KEY1_PASSWORD.toByteArray(),
+        privateKey,
+        password.toByteArray(),
         ENCRYPTED_CREDENTIALS
     )
 
@@ -175,6 +213,17 @@ class AutofillAuthActivity : AppCompatActivity() {
             passwordPresentation
         )
         .build()
+  }
+
+  private fun showError(message: String?) {
+    MaterialAlertDialogBuilder(this)
+        .setTitle(string.error)
+        .setMessage(message ?: getString(string.unknown_error))
+        .setPositiveButton(string.ok) { dialog, _ ->
+          dialog.dismiss()
+          finish()
+        }
+        .show()
   }
 
   companion object {

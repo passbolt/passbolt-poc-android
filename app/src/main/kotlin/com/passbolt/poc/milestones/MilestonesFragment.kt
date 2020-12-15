@@ -22,11 +22,11 @@ class MilestonesFragment : ListFragment() {
           R.id.action_milestonesFragment_to_autofillFragment
       ),
       FeatureElement(
-          R.string.milestone_setup,
-          View.NO_ID
+          R.string.milestone_secure_storage,
+          R.id.action_milestonesFragment_to_securestorageFragment
       ),
       FeatureElement(
-          R.string.milestone_secure_storage,
+          R.string.milestone_setup,
           View.NO_ID
       )
   )
