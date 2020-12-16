@@ -18,6 +18,7 @@ import android.widget.RemoteViews
 import com.passbolt.poc.milestones.autofill.applinkverifier.AppLinkVerifier
 import com.passbolt.poc.milestones.autofill.auth.AutofillAuthActivity
 import com.passbolt.poc.milestones.autofill.fingerprintverifier.FingerprintVerifier
+import com.passbolt.poc.milestones.autofill.manualfill.ManualFillActivity
 import com.passbolt.poc.milestones.autofill.parse.AssistStructureParser
 import com.passbolt.poc.milestones.autofill.parse.ParsedAssistStructure
 import com.passbolt.poc.util.TrustedAppsInfo
@@ -30,6 +31,7 @@ class PassboltPocAutofillService : AutofillService() {
     callback: FillCallback
   ) {
     val structure: AssistStructure = request.fillContexts.last().structure
+    val manualFillRequested = request.flags and FillRequest.FLAG_MANUAL_REQUEST != 0
 
     val packageName = structure.activityComponent.packageName
 
@@ -62,35 +64,42 @@ class PassboltPocAutofillService : AutofillService() {
       return
     }
 
-    // Verify app signature. For the purpose of this POC we support filling only
-    // Passbolt POC, Instagram, Facebook and Google Chrome apps
-    if (!fingerprintVerifier.verifySignatures(packageName)) {
-      callback.onFailure("Incorrect signatures.")
-    }
-
-    // Special handling for Instagram - POC imitates App Link verification
-    if (packageName == TrustedAppsInfo.INSTAGRAM_PACKAGE ||
-        (
-            webDomain.isNotEmpty() && TrustedAppsInfo.INSTAGRAM_WEB_ADDRESS.contains(
-                webDomain, ignoreCase = true
-            )
-            )
-    ) {
-      appLinkVerifier.verify(packageName, webDomain) { success ->
-        if (success) {
-          callback.onSuccess(
-              getInstagramFillResponse(
-                  usernameParsedAssistStructure, passwordParsedAssistStructure, packageName
-              )
-          )
-        } else {
-          callback.onFailure("Couldn't verify App Link.")
-        }
-      }
-    } else {
+    if (manualFillRequested) {
       callback.onSuccess(
-          getPOCFillResponse(usernameParsedAssistStructure, passwordParsedAssistStructure)
+          getManualFillResponse(usernameParsedAssistStructure, passwordParsedAssistStructure)
       )
+    } else {
+
+      // Verify app signature. For the purpose of this POC we support filling only
+      // Passbolt POC, Instagram, Facebook and Google Chrome apps
+      if (!fingerprintVerifier.verifySignatures(packageName)) {
+        callback.onFailure("Incorrect signatures.")
+      }
+
+      // Special handling for Instagram - POC imitates App Link verification
+      if (packageName == TrustedAppsInfo.INSTAGRAM_PACKAGE ||
+          (
+              webDomain.isNotEmpty() && TrustedAppsInfo.INSTAGRAM_WEB_ADDRESS.contains(
+                  webDomain, ignoreCase = true
+              )
+              )
+      ) {
+        appLinkVerifier.verify(packageName, webDomain) { success ->
+          if (success) {
+            callback.onSuccess(
+                getInstagramFillResponse(
+                    usernameParsedAssistStructure, passwordParsedAssistStructure, packageName
+                )
+            )
+          } else {
+            callback.onFailure("Couldn't verify App Link.")
+          }
+        }
+      } else {
+        callback.onSuccess(
+            getPOCFillResponse(usernameParsedAssistStructure, passwordParsedAssistStructure)
+        )
+      }
     }
   }
 
@@ -183,6 +192,38 @@ class PassboltPocAutofillService : AutofillService() {
                     passwordParsedAssistStructure.id,
                     AutofillValue.forText("Unencrypted credentials"),
                     passwordPresentation
+                )
+                .build()
+        )
+        .build()
+  }
+
+  private fun getManualFillResponse(
+    usernameParsedAssistStructure: ParsedAssistStructure,
+    passwordParsedAssistStructure: ParsedAssistStructure
+  ): FillResponse {
+    // Build the presentation of the datasets
+    val manualPresentation = preparePresentation("Tap to manually select data")
+
+    val intent = Intent(applicationContext, ManualFillActivity::class.java)
+    val sender = PendingIntent.getActivity(
+        applicationContext, 0, intent,
+        PendingIntent.FLAG_CANCEL_CURRENT
+    ).intentSender
+
+    return FillResponse.Builder()
+        .addDataset(
+            Dataset.Builder()
+                .setAuthentication(sender)
+                .setValue(
+                    usernameParsedAssistStructure.id,
+                    AutofillValue.forText(null),
+                    manualPresentation
+                )
+                .setValue(
+                    passwordParsedAssistStructure.id,
+                    AutofillValue.forText(null),
+                    manualPresentation
                 )
                 .build()
         )

@@ -24,8 +24,12 @@
 
     <activity
         android:name=".milestones.autofill.auth.AutofillAuthActivity"
-        android:label="Auth"
+        android:label="@string/autofill_auth_activity_label"
         android:theme="@style/Theme.Transparent" />
+
+    <activity
+        android:name=".milestones.autofill.manualfill.ManualFillActivity"
+        android:label="@string/autofill_manual_fill_activity_label" />
 
     <service
         android:name=".milestones.autofill.PassboltPocAutofillService"

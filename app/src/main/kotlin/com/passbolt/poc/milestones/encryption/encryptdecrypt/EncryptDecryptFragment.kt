@@ -7,9 +7,9 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.passbolt.poc.R
 import com.passbolt.poc.util.Keys
+import com.passbolt.poc.util.showError
 import helper.Helper
 
 class EncryptDecryptFragment : Fragment(R.layout.fragment_encrypt_decrypt) {
@@ -51,7 +51,7 @@ class EncryptDecryptFragment : Fragment(R.layout.fragment_encrypt_decrypt) {
                 .show()
             resultEditText.setText(encrypted)
           } catch (e: Exception) {
-            showError(e.message)
+            requireActivity().showError(e.message)
           }
         }
 
@@ -71,18 +71,8 @@ class EncryptDecryptFragment : Fragment(R.layout.fragment_encrypt_decrypt) {
                 .show()
             resultEditText.setText(decrypted)
           } catch (e: Exception) {
-            showError(e.message)
+            requireActivity().showError(e.message)
           }
         }
-  }
-
-  private fun showError(message: String?) {
-    MaterialAlertDialogBuilder(requireContext())
-        .setTitle(R.string.error)
-        .setMessage(message ?: getString(R.string.unknown_error))
-        .setPositiveButton(R.string.ok) { dialog, _ ->
-          dialog.dismiss()
-        }
-        .show()
   }
 }

@@ -8,9 +8,9 @@ import android.widget.EditText
 import android.widget.RadioButton
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.passbolt.poc.R
 import com.passbolt.poc.util.Keys
+import com.passbolt.poc.util.showError
 import crypto.Crypto
 import helper.Helper
 
@@ -67,7 +67,7 @@ class SignVerifyFragment : Fragment(R.layout.fragment_sign_verify) {
                 .show()
             resultEditText.setText(signed)
           } catch (e: Exception) {
-            showError(e.message)
+            requireActivity().showError(e.message)
           }
         }
 
@@ -85,18 +85,8 @@ class SignVerifyFragment : Fragment(R.layout.fragment_sign_verify) {
                 .show()
             resultEditText.setText(verified)
           } catch (e: Exception) {
-            showError(e.message)
+            requireActivity().showError(e.message)
           }
         }
-  }
-
-  private fun showError(message: String?) {
-    MaterialAlertDialogBuilder(requireContext())
-        .setTitle(R.string.error)
-        .setMessage(message ?: getString(R.string.unknown_error))
-        .setPositiveButton(R.string.ok) { dialog, _ ->
-          dialog.dismiss()
-        }
-        .show()
   }
 }

@@ -48,6 +48,10 @@
   <string name="autofill_edittext_header">Sample Login Using EditTexts</string>
   <string name="autofill_webview_header">Sample Login Using WebView</string>
   <string name="autofill_key_not_present_in_secure_storage">Error private key or password was not present in secure storage. Go to Secure Storage POC and save KEY 1 in Secure Storage.</string>
+  <string name="autofill_auth_activity_label">Auth</string>
+  <string name="autofill_manual_fill_activity_label">Manual fill</string>
+  <string name="autofill_unencrypted_dataset">Unencrypted dataset</string>
+  <string name="autofill_encrypted_dataset">Encrypted dataset</string>
 
   <string name="biometric_prompt_title">Biometric login for Passbolt POC app</string>
   <string name="biometric_prompt_subtitle">Log in using your biometric credential or use PIN</string>
@@ -64,4 +68,5 @@
   <string name="securestorage_clear_encrypted_storage">Clear encrypted storage</string>
   <string name="secure_storage_device_not_secure_message">Secure Storage won\'t work because this device is not secured with a PIN, pattern or password.</string>
   <string name="securestorage_error_reading_from_storage">Error while reading private key and password from secure storage.</string>
+
 </resources>

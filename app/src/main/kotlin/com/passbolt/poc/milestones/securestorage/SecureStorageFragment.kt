@@ -5,17 +5,13 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
-import android.widget.Toast
-import androidx.biometric.BiometricPrompt.AuthenticationResult
-import androidx.biometric.auth.AuthPromptCallback
-import androidx.biometric.auth.startClass3BiometricOrCredentialAuthentication
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentActivity
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.passbolt.poc.R
 import com.passbolt.poc.R.string
 import com.passbolt.poc.util.EncryptedPreferences
 import com.passbolt.poc.util.Keys
+import com.passbolt.poc.util.doAfterAuth
+import com.passbolt.poc.util.showError
 
 class SecureStorageFragment : Fragment(R.layout.fragment_securestorage) {
 
@@ -27,7 +23,7 @@ class SecureStorageFragment : Fragment(R.layout.fragment_securestorage) {
 
     val keyguardManager = requireContext().getSystemService(KeyguardManager::class.java)
     if (!keyguardManager.isDeviceSecure) {
-      showError(getString(string.secure_storage_device_not_secure_message))
+      requireActivity().showError(getString(string.secure_storage_device_not_secure_message))
       return
     }
 
@@ -51,7 +47,7 @@ class SecureStorageFragment : Fragment(R.layout.fragment_securestorage) {
 
     view.findViewById<Button>(R.id.button_read_keys_from_prefs_auth)
         .setOnClickListener {
-          doAfterAuth {
+          requireActivity().doAfterAuth {
             val encryptedPreferences = EncryptedPreferences(requireContext().applicationContext)
             publicKeyEditText.setText(encryptedPreferences.getPublicKey())
             privateKeyEditText.setText(encryptedPreferences.getPrivateKey())
@@ -67,13 +63,13 @@ class SecureStorageFragment : Fragment(R.layout.fragment_securestorage) {
             privateKeyEditText.setText(encryptedPreferences.getPrivateKey())
             passwordKeyEditText.setText(encryptedPreferences.getPassword())
           } catch (e: Exception) {
-            showError(getString(string.securestorage_auth_required))
+            requireActivity().showError(getString(string.securestorage_auth_required))
           }
         }
 
     view.findViewById<Button>(R.id.button_save_keys_in_prefs_auth)
         .setOnClickListener {
-          doAfterAuth {
+          requireActivity().doAfterAuth {
             val encryptedPreferences = EncryptedPreferences(requireContext().applicationContext)
             val publicKey = publicKeyEditText.text.toString()
             val privateKey = privateKeyEditText.text.toString()
@@ -91,65 +87,16 @@ class SecureStorageFragment : Fragment(R.layout.fragment_securestorage) {
             val password = passwordKeyEditText.text.toString()
             encryptedPreferences.saveKeyDataIfAbsent(publicKey, privateKey, password)
           } catch (e: Exception) {
-            showError(getString(string.securestorage_auth_required))
+            requireActivity().showError(getString(string.securestorage_auth_required))
           }
         }
 
     view.findViewById<Button>(R.id.button_clear_prefs)
         .setOnClickListener {
-          doAfterAuth {
+          requireActivity().doAfterAuth {
             val encryptedPreferences = EncryptedPreferences(requireContext().applicationContext)
             encryptedPreferences.clear()
           }
         }
-  }
-
-  private fun doAfterAuth(action: () -> Unit) {
-    startClass3BiometricOrCredentialAuthentication(
-        null,
-        getString(string.biometric_prompt_title),
-        getString(string.biometric_prompt_subtitle),
-        callback = object : AuthPromptCallback() {
-          override fun onAuthenticationError(
-            activity: FragmentActivity?,
-            errorCode: Int,
-            errString: CharSequence
-          ) {
-            super.onAuthenticationError(activity, errorCode, errString)
-            Toast.makeText(
-                requireContext().applicationContext,
-                "Authentication error: $errString", Toast.LENGTH_SHORT
-            )
-                .show()
-          }
-
-          override fun onAuthenticationSucceeded(
-            activity: FragmentActivity?,
-            result: AuthenticationResult
-          ) {
-            super.onAuthenticationSucceeded(activity, result)
-            action()
-          }
-
-          override fun onAuthenticationFailed(activity: FragmentActivity?) {
-            super.onAuthenticationFailed(activity)
-            Toast.makeText(
-                requireContext().applicationContext, "Authentication failed",
-                Toast.LENGTH_SHORT
-            )
-                .show()
-          }
-        }
-    )
-  }
-
-  private fun showError(message: String?) {
-    MaterialAlertDialogBuilder(requireContext())
-        .setTitle(string.error)
-        .setMessage(message ?: getString(string.unknown_error))
-        .setPositiveButton(string.ok) { dialog, _ ->
-          dialog.dismiss()
-        }
-        .show()
   }
 }
