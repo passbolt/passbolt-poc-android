@@ -17,3 +17,6 @@ local.properties
 /.idea/vcs.xml
 .idea
 *.log
+.bundle
+vendor/
+report.xml

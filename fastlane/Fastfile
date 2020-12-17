@@ -1,0 +1,54 @@
+# This file contains the fastlane.tools configuration
+# You can find the documentation at https://docs.fastlane.tools
+#
+# For a list of all available actions, check out
+#
+#     https://docs.fastlane.tools/actions
+#
+# For a list of all available plugins, check out
+#
+#     https://docs.fastlane.tools/plugins/available-plugins
+#
+
+# Uncomment the line if you want fastlane to automatically update itself
+# update_fastlane
+
+default_platform(:android)
+
+platform :android do
+
+  desc "Runs static analysis with detekt"
+  lane :detekt do
+    gradle(task: "detekt")
+  end
+
+  desc "Runs static analysis with SDK lint"
+  lane :lint_debug do
+    gradle(task: "lintDebug")
+  end
+
+  desc "Runs OWASP dependency analysis"
+  lane :owasp_dependency_check do
+    gradle(task: "dependencyCheckAggregate")
+  end
+
+  desc "Runs run unit tests"
+  lane :unit_tests_debug do
+    gradle(task: "testDebugUnitTest")
+  end
+
+  desc "Runs run UI tests"
+  lane :ui_tests_debug do
+    gradle(task: "testDebugUnitTest")
+  end
+
+  desc "Build debug version"
+  lane :build_debug do
+    gradle(task: "assembleDebug")
+  end
+
+  desc "Deploy debug version"
+  lane :deploy_debug do
+    gradle(task: "assembleDebug")
+  end
+end

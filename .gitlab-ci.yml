@@ -1,0 +1,130 @@
+stages:
+  - static_analysis
+  - test
+  - build
+  - deploy
+  - security
+
+cache:
+  key: "$CI_REPOSITORY_URL"
+
+before_script:
+  - export GRADLE_USER_HOME="/cache/.gradle"
+  - export LANG=en_US.UTF-8
+  - export LANGUAGE=en_US.UTF-8
+  - export LC_ALL=en_US.UTF-8
+
+"static_analysis:lint_debug":
+  stage: static_analysis
+  only:
+    - refs
+    - branches
+    - merge_requests
+    - tags
+  tags:
+    - android
+  script:
+    - bundle check || bundle install --path=/cache
+    - bundle exec fastlane lint_debug
+
+"static_analysis:detekt":
+  stage: static_analysis
+  only:
+    - refs
+    - branches
+    - merge_requests
+    - tags
+  tags:
+    - android
+  script:
+    - bundle check || bundle install --path=/cache
+    - bundle exec fastlane detekt
+
+"build:debug":
+  stage: build
+  only:
+    - refs
+    - branches
+    - merge_requests
+  tags:
+    - android
+  script:
+    - bundle check || bundle install --path=/cache
+    - bundle exec fastlane build_debug
+
+"testUnit:debug":
+  stage: test
+  only:
+    - refs
+    - branches
+    - merge_requests
+    - tags
+  tags:
+    - android
+  script:
+    - bundle check || bundle install --path=/cache
+    - bundle exec fastlane unit_tests_debug
+  artifacts:
+    expire_in: 1 day
+    paths:
+      - app/build/test-results/testDebugUnitTest/TEST-*.xml
+    reports:
+      junit: app/build/test-results/testDebugUnitTest/TEST-*.xml
+
+"testUI:debug":
+  stage: test
+  tags:
+    - android
+  script:
+    # - Run simulator and wait for connection
+    - bundle check || bundle install --path=/cache
+    - bundle exec fastlane ui_tests_debug
+  only:
+    - merge_requests
+    - tags
+
+"deploy:debug":
+  stage: deploy
+  tags:
+    - android
+  only:
+    - tags
+  script:
+    - bundle check || bundle install --path=/cache
+    - bundle exec fastlane deploy_debug
+
+"security:owasp_dependency_check":
+  stage: security
+  tags:
+    - android
+  script:
+    - bundle check || bundle install --path=/cache
+    - bundle exec fastlane owasp_dependency_check
+  artifacts:
+    expire_in: 1 day
+    paths:
+      - app/build/reports/dependency-check-junit.xml
+    reports:
+      junit: app/build/reports/dependency-check-junit.xml
+  only:
+    refs:
+      - merge_requests
+    changes:
+      - build.gradle
+      - app/build.gradle
+
+"security:owasp_dependency_check_tag":
+  stage: security
+  tags:
+    - android
+  only:
+    - tags
+  script:
+    - bundle check || bundle install --path=/cache
+    - bundle exec fastlane owasp_dependency_check
+  artifacts:
+    expire_in: 1 day
+    paths:
+      - app/build/reports/dependency-check-junit.xml
+    reports:
+      junit: app/build/reports/dependency-check-junit.xml

@@ -21,7 +21,11 @@ buildscript {
           'securitycrypto': '1.1.0-alpha03'
       ],
       'material': '1.3.0-alpha04',
-      'ktlint': '0.39.0'
+      'ktlint': '0.39.0',
+      'owasp_dependency_check': '6.0.3',
+      'test': [
+          'junit': '4.12'
+      ]
   ]
 
   ext.deps = [
@@ -36,6 +40,9 @@ buildscript {
           securitycrypto: "androidx.security:security-crypto:${versions.androidx.securitycrypto}"
       ],
       material: "com.google.android.material:material:${versions.material}",
+      test: [
+          junit: "junit:junit:${versions.test.junit}"
+      ],
   ]
 
   repositories {
@@ -50,6 +57,7 @@ buildscript {
   dependencies {
     classpath "com.android.tools.build:gradle:${versions.agp}"
     classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:${versions.kotlin}"
+    classpath "org.owasp:dependency-check-gradle:${versions.owasp_dependency_check}"
     // NOTE: Do not place your application dependencies here; they belong
     // in the individual module build.gradle files
   }
@@ -57,6 +65,7 @@ buildscript {
 
 plugins {
   id "com.diffplug.spotless" version "5.8.2"
+  id "io.gitlab.arturbosch.detekt" version "1.15.0-RC2"
   id 'com.github.ben-manes.versions' version "0.36.0"
 }
 
@@ -72,6 +81,12 @@ allprojects {
 }
 
 subprojects {
+  apply plugin: 'org.owasp.dependencycheck'
+
+  dependencyCheck {
+    formats = ['HTML', 'JUNIT']
+  }
+
   apply plugin: 'com.diffplug.spotless'
   spotless {
     kotlin {
@@ -81,4 +96,11 @@ subprojects {
       ktlint(versions.ktlint).userData(['indent_size': '2', 'continuation_indent_size': '4'])
     }
   }
+
+  detekt {
+    toolVersion = "1.15.0-RC2"
+    config = files("config/detekt/detekt.yml")
+    buildUponDefaultConfig = true
+  }
+
 }
