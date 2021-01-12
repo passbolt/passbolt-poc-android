@@ -44,8 +44,12 @@
     </service>
   </application>
 
+  <uses-feature android:name="android.hardware.camera.any" />
+
   <uses-permission
       android:name="android.permission.QUERY_ALL_PACKAGES"
       tools:ignore="QueryAllPackagesPermission" />
+
+  <uses-permission android:name="android.permission.CAMERA" />
 
 </manifest>

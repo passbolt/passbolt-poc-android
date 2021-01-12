@@ -3,6 +3,8 @@
 
   <string name="not_implemented">Not implemented yet</string>
   <string name="ok">OK</string>
+  <string name="cancel">Cancel</string>
+  <string name="go_to_settings">Go to settings</string>
   <string name="info">Info</string>
   <string name="error">Error</string>
   <string name="unknown_error">Unknown error</string>
@@ -69,4 +71,11 @@
   <string name="secure_storage_device_not_secure_message">Secure Storage won\'t work because this device is not secured with a PIN, pattern or password.</string>
   <string name="securestorage_error_reading_from_storage">Error while reading private key and password from secure storage.</string>
 
+  <!--  setup milestone -->
+  <string name="setup">Setup POC</string>
+  <string name="setup_start">Start Setup</string>
+  <string name="setup_instruction">During the setup process you\'ll be shown a series of QR codes. Keep the phone still and point it at QR codes. Wait unitl the process is finished. In case of any error you can close the setup process and start again.</string>
+  <string name="setup_image_processing_failed">Failed to process image.</string>
+  <string name="setup_camera_setup_failed">Unknown error occurred while setting up camera.</string>
+  <string name="setup_camera_permission_required">Camera permission is required to start the setup process.</string>
 </resources>

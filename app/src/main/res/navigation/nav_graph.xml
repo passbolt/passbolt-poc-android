@@ -77,10 +77,27 @@
     <action
         android:id="@+id/action_milestonesFragment_to_securestorageFragment"
         app:destination="@id/securestorageFragment" />
+    <action
+        android:id="@+id/action_milestonesFragment_to_setupFragment"
+        app:destination="@id/setupFragment" />
   </fragment>
 
   <fragment
       android:id="@+id/securestorageFragment"
       android:name="com.passbolt.poc.milestones.securestorage.SecureStorageFragment"
       android:label="@string/securestorage" />
+
+  <fragment
+      android:id="@+id/setupFragment"
+      android:name="com.passbolt.poc.milestones.setup.SetupFragment"
+      android:label="@string/setup">
+    <action
+        android:id="@+id/action_setupFragment_to_setupCameraFragment"
+        app:destination="@id/setupCameraFragment" />
+  </fragment>
+
+  <fragment
+      android:id="@+id/setupCameraFragment"
+      android:name="com.passbolt.poc.milestones.setup.camera.CameraFragment"
+      android:label="@string/setup" />
 </navigation>

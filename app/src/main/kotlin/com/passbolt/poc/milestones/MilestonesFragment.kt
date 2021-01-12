@@ -27,7 +27,7 @@ class MilestonesFragment : ListFragment() {
       ),
       FeatureElement(
           R.string.milestone_setup,
-          View.NO_ID
+          R.id.action_milestonesFragment_to_setupFragment
       )
   )
 

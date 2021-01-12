@@ -47,7 +47,7 @@
         app:layout_constraintBaseline_toBaselineOf="@+id/password_edit_text"
         app:layout_constraintEnd_toStartOf="@+id/password_edit_text"
         app:layout_constraintStart_toStartOf="parent"
-        style="@style/TextAppearance.AppCompat.Body1"
+        style="@style/TextAppearance.MaterialComponents.Body1"
         />
 
     <TextView
@@ -61,7 +61,7 @@
         app:layout_constraintBaseline_toBaselineOf="@+id/username_edit_text"
         app:layout_constraintEnd_toStartOf="@+id/username_edit_text"
         app:layout_constraintStart_toStartOf="parent"
-        style="@style/TextAppearance.AppCompat.Body1"
+        style="@style/TextAppearance.MaterialComponents.Body1"
         />
 
     <com.google.android.material.button.MaterialButton

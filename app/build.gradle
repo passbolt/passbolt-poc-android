@@ -52,6 +52,10 @@ dependencies {
   implementation deps.androidx.biometric
   implementation deps.androidx.securitycrypto
   implementation deps.material
+  implementation deps.barcodescanner
+  implementation deps.androidx.camera.camera2
+  implementation deps.androidx.camera.lifecycle
+  implementation deps.androidx.camera.view
 
   testImplementation deps.test.junit
 
