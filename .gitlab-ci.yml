@@ -23,6 +23,7 @@ before_script:
     - tags
   tags:
     - android
+    - asimov
   script:
     - bundle check || bundle install --path=/cache
     - bundle exec fastlane lint_debug
@@ -36,6 +37,7 @@ before_script:
     - tags
   tags:
     - android
+    - asimov
   script:
     - bundle check || bundle install --path=/cache
     - bundle exec fastlane detekt
@@ -48,6 +50,7 @@ before_script:
     - merge_requests
   tags:
     - android
+    - asimov
   script:
     - bundle check || bundle install --path=/cache
     - bundle exec fastlane build_debug
@@ -61,6 +64,7 @@ before_script:
     - tags
   tags:
     - android
+    - asimov
   script:
     - bundle check || bundle install --path=/cache
     - bundle exec fastlane unit_tests_debug
@@ -75,6 +79,7 @@ before_script:
   stage: test
   tags:
     - android
+    - asimov
   script:
     # - Run simulator and wait for connection
     - bundle check || bundle install --path=/cache
@@ -87,6 +92,7 @@ before_script:
   stage: deploy
   tags:
     - android
+    - asimov
   only:
     - tags
   script:
@@ -97,6 +103,7 @@ before_script:
   stage: security
   tags:
     - android
+    - asimov
   script:
     - bundle check || bundle install --path=/cache
     - bundle exec fastlane owasp_dependency_check
@@ -117,6 +124,7 @@ before_script:
   stage: security
   tags:
     - android
+    - asimov
   only:
     - tags
   script:
