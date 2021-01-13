@@ -84,4 +84,9 @@ class CameraFragment : Fragment(R.layout.fragment_camera) {
         mainExecutor
     )
   }
+
+  override fun onDestroyView() {
+    super.onDestroyView()
+    imageProcessor.stop()
+  }
 }
