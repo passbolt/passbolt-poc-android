@@ -8,11 +8,14 @@ buildscript {
   ]
 
   ext.versions = [
-      'kotlin': '1.4.21',
+      'kotlin': [
+          'plugin': '1.4.21',
+          'coroutines': '1.4.2'
+      ],
       'agp': '4.2.0-beta03',
       'androidx': [
-          'appcompat': '1.3.0-alpha02',
-          'core': '1.5.0-alpha05',
+          'appcompat': '1.3.0-beta01',
+          'core': '1.5.0-beta01',
           'constraintlayout': '2.1.0-alpha2',
           'navigationfragment': '2.3.2',
           'navigationui': '2.3.2',
@@ -35,6 +38,9 @@ buildscript {
   ]
 
   ext.deps = [
+      kotlin: [
+          coroutines: "org.jetbrains.kotlinx:kotlinx-coroutines-android:${versions.kotlin.coroutines}"
+      ],
       androidx: [
           appcompat: "androidx.appcompat:appcompat:${versions.androidx.appcompat}",
           core: "androidx.core:core-ktx:${versions.androidx.core}",
@@ -68,7 +74,7 @@ buildscript {
 
   dependencies {
     classpath "com.android.tools.build:gradle:${versions.agp}"
-    classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:${versions.kotlin}"
+    classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:${versions.kotlin.plugin}"
     classpath "org.owasp:dependency-check-gradle:${versions.owasp_dependency_check}"
     // NOTE: Do not place your application dependencies here; they belong
     // in the individual module build.gradle files
