@@ -39,7 +39,7 @@ platform :android do
 
   desc "Runs run UI tests"
   lane :ui_tests_debug do
-    gradle(task: "testDebugUnitTest")
+    gradle(task: "connectedDebugAndroidTest")
   end
 
   desc "Build debug version"

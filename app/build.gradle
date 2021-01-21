@@ -13,6 +13,8 @@ android {
     versionCode System.env.CI_JOB_ID ? System.env.CI_JOB_ID.toInteger() : 1
     versionName System.env.CI_COMMIT_TAG ? System.env.CI_COMMIT_TAG : "0.0.1"
     resConfigs "en"
+    testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    testInstrumentationRunnerArguments clearPackageData: 'true'
   }
 
   buildTypes {
@@ -33,10 +35,29 @@ android {
   kotlinOptions {
     jvmTarget = '1.8'
   }
+
+  testOptions {
+    animationsDisabled = true
+
+    unitTests {
+      includeAndroidResources = true
+    }
+
+    unitTests.all {
+      useJUnit {
+        excludeCategories 'com.passbolt.poc.DoNotRunOnJvm'
+      }
+
+      ignoreFailures false
+    }
+  }
+
   sourceSets {
     androidTest.java.srcDirs += "src/androidTest/kotlin"
+    androidTest.java.srcDirs += "src/sharedTest/kotlin"
     main.java.srcDirs += "src/main/kotlin"
     test.java.srcDirs += "src/test/kotlin"
+    test.java.srcDirs += "src/sharedTest/kotlin"
   }
 }
 
@@ -58,7 +79,18 @@ dependencies {
   implementation deps.androidx.camera.lifecycle
   implementation deps.androidx.camera.view
 
-  testImplementation deps.test.junit
+  debugImplementation (deps.test.fragment_testing) {
+    exclude group: 'androidx.test', module: 'core'
+  }
 
-  androidTestImplementation deps.test.junit
+  testImplementation deps.test.androidx.runner
+  testImplementation deps.test.androidx.rules
+  testImplementation deps.test.androidx.espresso_core
+  testImplementation deps.test.androidx.junit
+  testImplementation deps.test.robolectric
+
+  androidTestImplementation deps.test.androidx.runner
+  androidTestImplementation deps.test.androidx.rules
+  androidTestImplementation deps.test.androidx.espresso_core
+  androidTestImplementation deps.test.androidx.junit
 }

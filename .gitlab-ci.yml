@@ -21,8 +21,9 @@ before_script:
     - branches
     - merge_requests
     - tags
+  image:
+    name: gitlab.polidea.com:4567/runners/android:jdk11
   tags:
-    - android
     - asimov
   script:
     - bundle check || bundle install --path=/cache
@@ -35,8 +36,9 @@ before_script:
     - branches
     - merge_requests
     - tags
+  image:
+    name: gitlab.polidea.com:4567/runners/android:jdk11
   tags:
-    - android
     - asimov
   script:
     - bundle check || bundle install --path=/cache
@@ -48,8 +50,9 @@ before_script:
     - refs
     - branches
     - merge_requests
+  image:
+    name: gitlab.polidea.com:4567/runners/android:jdk11
   tags:
-    - android
     - asimov
   script:
     - bundle check || bundle install --path=/cache
@@ -62,8 +65,9 @@ before_script:
     - branches
     - merge_requests
     - tags
+  image:
+    name: gitlab.polidea.com:4567/runners/android:jdk11
   tags:
-    - android
     - asimov
   script:
     - bundle check || bundle install --path=/cache
@@ -72,26 +76,43 @@ before_script:
     expire_in: 1 day
     paths:
       - app/build/test-results/testDebugUnitTest/TEST-*.xml
+      - app/build/reports/tests/testDebugUnitTest/
     reports:
       junit: app/build/test-results/testDebugUnitTest/TEST-*.xml
 
 "testUI:debug":
+  services:
+    - name: gitlab.polidea.com:4567/runners/android-emulator:jdk11
+      alias: android-emulator
+      entrypoint: [ "/start-emulator.sh", "android-30", "x86", "pixel_xl" ]
   stage: test
+  image:
+    name: gitlab.polidea.com:4567/runners/android:jdk11
   tags:
-    - android
     - asimov
+  before_script:
+    # Wait for the emulator to start
+    - adb connect android-emulator:5555
+    - adb wait-for-device shell 'while [[ -z $(getprop sys.boot_completed) ]]; do sleep 1; done; input keyevent 82'
   script:
-    # - Run simulator and wait for connection
     - bundle check || bundle install --path=/cache
     - bundle exec fastlane ui_tests_debug
   only:
     - merge_requests
     - tags
+  artifacts:
+    expire_in: 1 day
+    paths:
+      - app/build/outputs/androidTest-results/connected/TEST-*.xml
+      - app/build/reports/androidTests/connected/
+    reports:
+      junit: app/build/outputs/androidTest-results/connected/TEST-*.xml
 
 "deploy:debug":
   stage: deploy
+  image:
+    name: gitlab.polidea.com:4567/runners/android:jdk11
   tags:
-    - android
     - asimov
   only:
     - tags
@@ -101,8 +122,9 @@ before_script:
 
 "security:owasp_dependency_check":
   stage: security
+  image:
+    name: gitlab.polidea.com:4567/runners/android:jdk11
   tags:
-    - android
     - asimov
   script:
     - bundle check || bundle install --path=/cache
@@ -111,6 +133,7 @@ before_script:
     expire_in: 1 day
     paths:
       - app/build/reports/dependency-check-junit.xml
+      - app/build/reports/dependency-check-report.html
     reports:
       junit: app/build/reports/dependency-check-junit.xml
   only:
@@ -122,8 +145,9 @@ before_script:
 
 "security:owasp_dependency_check_tag":
   stage: security
+  image:
+    name: gitlab.polidea.com:4567/runners/android:jdk11
   tags:
-    - android
     - asimov
   only:
     - tags
@@ -134,5 +158,6 @@ before_script:
     expire_in: 1 day
     paths:
       - app/build/reports/dependency-check-junit.xml
+      - app/build/reports/dependency-check-report.html
     reports:
       junit: app/build/reports/dependency-check-junit.xml
