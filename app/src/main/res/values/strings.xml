@@ -69,7 +69,6 @@
   <string name="securestorage_save_keys_no_auth">Save keys (no auth)</string>
   <string name="securestorage_clear_encrypted_storage">Clear encrypted storage</string>
   <string name="secure_storage_device_not_secure_message">Secure Storage won\'t work because this device is not secured with a PIN, pattern or password.</string>
-  <string name="securestorage_error_reading_from_storage">Error while reading private key and password from secure storage.</string>
 
   <!--  setup milestone -->
   <string name="setup">Setup POC</string>

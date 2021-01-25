@@ -1,6 +1,7 @@
 plugins {
   id 'com.android.application'
   id 'kotlin-android'
+  id 'com.squareup.sqldelight'
 }
 
 android {
@@ -75,6 +76,9 @@ dependencies {
   implementation deps.androidx.securitycrypto
   implementation deps.material
   implementation deps.barcodescanner
+  implementation deps.sqldelight.driver
+  implementation deps.sqldelight.coroutines
+  implementation deps.sqlcipher
   implementation deps.androidx.camera.camera2
   implementation deps.androidx.camera.lifecycle
   implementation deps.androidx.camera.view

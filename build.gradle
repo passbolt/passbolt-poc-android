@@ -28,8 +28,10 @@ buildscript {
               'view': '1.0.0-alpha20'
           ]
       ],
-      'material': '1.3.0-beta01',
+      'material': '1.3.0-rc01',
       'barcodescanner': '16.1.0',
+      'sqldelight': '1.4.4',
+      'sqlcipher': '4.4.2',
       'ktlint': '0.39.0',
       'owasp_dependency_check': '6.0.5',
       'test': [
@@ -65,6 +67,11 @@ buildscript {
       ],
       material: "com.google.android.material:material:${versions.material}",
       barcodescanner: "com.google.mlkit:barcode-scanning:${versions.barcodescanner}",
+      sqldelight: [
+          driver: "com.squareup.sqldelight:android-driver:${versions.sqldelight}",
+          coroutines: "com.squareup.sqldelight:coroutines-extensions-jvm:${versions.sqldelight}"
+      ],
+      sqlcipher: "net.zetetic:android-database-sqlcipher:${versions.sqlcipher}",
       test: [
           junit: "junit:junit:${versions.test.junit}",
           fragment_testing: "androidx.fragment:fragment-testing:${versions.test.fragment_testing}",
@@ -89,6 +96,7 @@ buildscript {
 
   dependencies {
     classpath "com.android.tools.build:gradle:${versions.agp}"
+    classpath "com.squareup.sqldelight:gradle-plugin:${versions.sqldelight}"
     classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:${versions.kotlin.plugin}"
     classpath "org.owasp:dependency-check-gradle:${versions.owasp_dependency_check}"
     // NOTE: Do not place your application dependencies here; they belong

@@ -2,7 +2,10 @@ package com.passbolt.poc.util
 
 import android.content.Context
 import android.content.SharedPreferences
+import androidx.core.content.edit
 import androidx.security.crypto.EncryptedSharedPreferences
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 class EncryptedPreferences(
   context: Context
@@ -20,47 +23,25 @@ class EncryptedPreferences(
     )
   }
 
-  fun saveKeyDataIfAbsent(
-    publicKey: String,
-    privateKey: String,
-    password: String
-  ) {
-    if (preferences.getString(PUBLIC_KEY_PREFERENCE_NAME, null) == null ||
-        preferences.getString(PRIVATE_KEY_PREFERENCE_NAME, null) == null ||
-        preferences.getString(PASSWORD_PREFERENCE_NAME, null) == null
-    ) {
-      with(preferences.edit()) {
-        putString(PUBLIC_KEY_PREFERENCE_NAME, publicKey)
-        putString(PRIVATE_KEY_PREFERENCE_NAME, privateKey)
-        putString(PASSWORD_PREFERENCE_NAME, password)
-        apply()
-      }
+  suspend fun saveDatabasePassword(password: String) = withContext(Dispatchers.IO) {
+    preferences.edit(commit = true) {
+      putString(DB_PASSWORD_PREFERENCE_NAME, password)
     }
   }
 
-  fun getPublicKey(): String {
-    return preferences.getString(PUBLIC_KEY_PREFERENCE_NAME, null) ?: ""
+  suspend fun getDatabasePassword(): String = withContext(Dispatchers.IO) {
+    preferences.getString(DB_PASSWORD_PREFERENCE_NAME, null) ?: ""
   }
 
-  fun getPrivateKey(): String {
-    return preferences.getString(PRIVATE_KEY_PREFERENCE_NAME, null) ?: ""
-  }
-
-  fun getPassword(): String {
-    return preferences.getString(PASSWORD_PREFERENCE_NAME, null) ?: ""
-  }
-
-  fun clear() {
-    preferences.edit()
-        .clear()
-        .apply()
+  suspend fun clear() = withContext(Dispatchers.IO) {
+    preferences.edit(commit = true) {
+      clear()
+    }
   }
 
   companion object {
     private const val PREFS_FILE_NAME = "passbolt_encrypted_prefs"
 
-    private const val PUBLIC_KEY_PREFERENCE_NAME = "passbolt_public_key_preference"
-    private const val PRIVATE_KEY_PREFERENCE_NAME = "passbolt_private_key_preference"
-    private const val PASSWORD_PREFERENCE_NAME = "passbolt_password_preference"
+    private const val DB_PASSWORD_PREFERENCE_NAME = "passbolt_db_password_preference"
   }
 }

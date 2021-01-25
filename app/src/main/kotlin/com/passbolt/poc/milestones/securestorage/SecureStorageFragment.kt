@@ -6,12 +6,14 @@ import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import com.passbolt.poc.R
 import com.passbolt.poc.R.string
-import com.passbolt.poc.util.EncryptedPreferences
 import com.passbolt.poc.util.Keys
+import com.passbolt.poc.util.SecureStorage
 import com.passbolt.poc.util.doAfterAuth
 import com.passbolt.poc.util.showError
+import kotlinx.coroutines.launch
 
 class SecureStorageFragment : Fragment(R.layout.fragment_securestorage) {
 
@@ -48,54 +50,61 @@ class SecureStorageFragment : Fragment(R.layout.fragment_securestorage) {
     view.findViewById<Button>(R.id.button_read_keys_from_prefs_auth)
         .setOnClickListener {
           requireActivity().doAfterAuth {
-            val encryptedPreferences = EncryptedPreferences(requireContext().applicationContext)
-            publicKeyEditText.setText(encryptedPreferences.getPublicKey())
-            privateKeyEditText.setText(encryptedPreferences.getPrivateKey())
-            passwordKeyEditText.setText(encryptedPreferences.getPassword())
+            lifecycleScope.launch {
+              val keyData = SecureStorage.getKeyData(requireContext()) ?: return@launch
+              publicKeyEditText.setText(keyData.public_key)
+              privateKeyEditText.setText(keyData.private_key)
+              passwordKeyEditText.setText(keyData.password)
+            }
           }
         }
 
     view.findViewById<Button>(R.id.button_read_keys_from_prefs_no_auth)
         .setOnClickListener {
-          try {
-            val encryptedPreferences = EncryptedPreferences(requireContext().applicationContext)
-            publicKeyEditText.setText(encryptedPreferences.getPublicKey())
-            privateKeyEditText.setText(encryptedPreferences.getPrivateKey())
-            passwordKeyEditText.setText(encryptedPreferences.getPassword())
-          } catch (e: Exception) {
-            requireActivity().showError(getString(string.securestorage_auth_required))
+          lifecycleScope.launch {
+            try {
+              val keyData = SecureStorage.getKeyData(requireContext()) ?: return@launch
+              publicKeyEditText.setText(keyData.public_key)
+              privateKeyEditText.setText(keyData.private_key)
+              passwordKeyEditText.setText(keyData.password)
+            } catch (e: Exception) {
+              requireActivity().showError(getString(string.securestorage_auth_required))
+            }
           }
         }
 
     view.findViewById<Button>(R.id.button_save_keys_in_prefs_auth)
         .setOnClickListener {
           requireActivity().doAfterAuth {
-            val encryptedPreferences = EncryptedPreferences(requireContext().applicationContext)
-            val publicKey = publicKeyEditText.text.toString()
-            val privateKey = privateKeyEditText.text.toString()
-            val password = passwordKeyEditText.text.toString()
-            encryptedPreferences.saveKeyDataIfAbsent(publicKey, privateKey, password)
+            lifecycleScope.launch {
+              val publicKey = publicKeyEditText.text.toString()
+              val privateKey = privateKeyEditText.text.toString()
+              val password = passwordKeyEditText.text.toString()
+              SecureStorage.saveKeyDataIfAbsent(requireContext(), publicKey, privateKey, password)
+            }
           }
         }
 
     view.findViewById<Button>(R.id.button_save_keys_in_prefs_no_auth)
         .setOnClickListener {
-          try {
-            val encryptedPreferences = EncryptedPreferences(requireContext().applicationContext)
-            val publicKey = publicKeyEditText.text.toString()
-            val privateKey = privateKeyEditText.text.toString()
-            val password = passwordKeyEditText.text.toString()
-            encryptedPreferences.saveKeyDataIfAbsent(publicKey, privateKey, password)
-          } catch (e: Exception) {
-            requireActivity().showError(getString(string.securestorage_auth_required))
+          lifecycleScope.launch {
+            try {
+              val publicKey = publicKeyEditText.text.toString()
+              val privateKey = privateKeyEditText.text.toString()
+              val password = passwordKeyEditText.text.toString()
+              SecureStorage.saveKeyDataIfAbsent(requireContext(), publicKey, privateKey, password)
+            } catch (e: Exception) {
+              requireActivity().showError(getString(string.securestorage_auth_required))
+            }
           }
         }
 
     view.findViewById<Button>(R.id.button_clear_prefs)
         .setOnClickListener {
           requireActivity().doAfterAuth {
-            val encryptedPreferences = EncryptedPreferences(requireContext().applicationContext)
-            encryptedPreferences.clear()
+            lifecycleScope.launch {
+              SecureStorage.clear(requireContext())
+            }
           }
         }
   }

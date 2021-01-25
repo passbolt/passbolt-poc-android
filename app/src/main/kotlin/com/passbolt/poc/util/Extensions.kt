@@ -1,5 +1,6 @@
 package com.passbolt.poc.util
 
+import android.util.Log
 import android.widget.Toast
 import androidx.biometric.BiometricPrompt.AuthenticationResult
 import androidx.biometric.auth.AuthPromptCallback
@@ -37,21 +38,21 @@ fun FragmentActivity.doAfterAuth(action: () -> Unit) {
 
         override fun onAuthenticationFailed(activity: FragmentActivity?) {
           super.onAuthenticationFailed(activity)
-          Toast.makeText(
-              applicationContext, "Authentication failed",
-              Toast.LENGTH_SHORT
-          )
-              .show()
+          Log.e("Error", "Authentication failed")
         }
       }
   )
 }
 
-fun FragmentActivity.showError(message: String?) {
+fun FragmentActivity.showError(
+  message: String?,
+  okAction: (() -> Unit)? = null
+) {
   MaterialAlertDialogBuilder(this)
       .setTitle(string.error)
       .setMessage(message ?: getString(string.unknown_error))
       .setPositiveButton(string.ok) { dialog, _ ->
+        okAction?.invoke()
         dialog.dismiss()
       }
       .show()

@@ -1,0 +1,16 @@
+CREATE TABLE keyData (
+  public_key TEXT NOT NULL,
+  private_key TEXT NOT NULL,
+  password TEXT NOT NULL
+);
+
+selectAll:
+SELECT *
+FROM keyData;
+
+insert:
+INSERT INTO keyData(public_key, private_key, password)
+VALUES ?;
+
+deleteAll:
+DELETE FROM keyData;

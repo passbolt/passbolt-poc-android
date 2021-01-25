@@ -13,14 +13,17 @@ import android.view.autofill.AutofillValue
 import android.widget.Button
 import android.widget.RemoteViews
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import com.passbolt.poc.R
 import com.passbolt.poc.R.string
 import com.passbolt.poc.milestones.autofill.parse.AssistStructureParser
 import com.passbolt.poc.milestones.autofill.parse.ParsedAssistStructure
-import com.passbolt.poc.util.EncryptedPreferences
+import com.passbolt.poc.util.Gopenpgp
+import com.passbolt.poc.util.SecureStorage
 import com.passbolt.poc.util.doAfterAuth
 import com.passbolt.poc.util.showError
-import helper.Helper
+import compassboltpoc.KeyData
+import kotlinx.coroutines.launch
 
 class ManualFillActivity : AppCompatActivity() {
 
@@ -30,34 +33,25 @@ class ManualFillActivity : AppCompatActivity() {
     setContentView(R.layout.activity_manual_fill)
 
     doAfterAuth {
-      val keyAndPasswordPair = getKeyAndPasswordFromSecureStorage()
+      lifecycleScope.launch {
+        val keyData = getKeyAndPasswordFromSecureStorage()
 
-      if (keyAndPasswordPair == null) {
-        showError(getString(string.securestorage_error_reading_from_storage))
-      } else {
-        val (privateKey, password) = keyAndPasswordPair
-
-        if (privateKey.isEmpty() || password.isEmpty()) {
+        if (keyData == null) {
           showError(
               getString(string.autofill_key_not_present_in_secure_storage)
-          )
+          ) {
+            setResult(RESULT_CANCELED)
+            finish()
+          }
         } else {
-          fillRequest(privateKey, password)
+          fillRequest(keyData.private_key, keyData.password)
         }
       }
     }
   }
 
-  private fun getKeyAndPasswordFromSecureStorage(): Pair<String, String>? {
-    return try {
-      val encryptedPreferences = EncryptedPreferences(applicationContext)
-      Pair(
-          encryptedPreferences.getPrivateKey(),
-          encryptedPreferences.getPassword()
-      )
-    } catch (e: Exception) {
-      null
-    }
+  private suspend fun getKeyAndPasswordFromSecureStorage(): KeyData? {
+    return SecureStorage.getKeyData(this)
   }
 
   private fun fillRequest(
@@ -110,14 +104,16 @@ class ManualFillActivity : AppCompatActivity() {
 
     findViewById<Button>(R.id.button_encrypted_dataset)
         .setOnClickListener {
-          val dataset = getEncryptedDataset(
-              privateKey,
-              password,
-              usernameParsedAssistStructure,
-              passwordParsedAssistStructure
-          )
+          lifecycleScope.launch {
+            val dataset = getEncryptedDataset(
+                privateKey,
+                password,
+                usernameParsedAssistStructure,
+                passwordParsedAssistStructure
+            )
 
-          returnResultAndClose(dataset)
+            returnResultAndClose(dataset)
+          }
         }
   }
 
@@ -158,7 +154,7 @@ class ManualFillActivity : AppCompatActivity() {
         .build()
   }
 
-  private fun getEncryptedDataset(
+  private suspend fun getEncryptedDataset(
     privateKey: String,
     password: String,
     usernameParsedAssistStructure: ParsedAssistStructure,
@@ -168,7 +164,7 @@ class ManualFillActivity : AppCompatActivity() {
     val usernamePresentation = preparePresentation("Encrypted username dataset")
     val passwordPresentation = preparePresentation("Encrypted password dataset")
 
-    val decryptedCredentials = Helper.decryptMessageArmored(
+    val decryptedCredentials = Gopenpgp.decryptMessageArmored(
         privateKey,
         password.toByteArray(),
         ENCRYPTED_CREDENTIALS

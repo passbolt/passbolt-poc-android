@@ -8,11 +8,12 @@ import android.widget.EditText
 import android.widget.RadioButton
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import com.passbolt.poc.R
+import com.passbolt.poc.util.Gopenpgp
 import com.passbolt.poc.util.Keys
 import com.passbolt.poc.util.showError
-import crypto.Crypto
-import helper.Helper
+import kotlinx.coroutines.launch
 
 class SignVerifyFragment : Fragment(R.layout.fragment_sign_verify) {
 
@@ -53,39 +54,44 @@ class SignVerifyFragment : Fragment(R.layout.fragment_sign_verify) {
 
     view.findViewById<Button>(R.id.button_sign)
         .setOnClickListener {
-          try {
-            val message = messageEditText.text.toString()
-            val key = keyEditText.text.toString()
-            val password = passwordEditText.text.toString()
-                .toByteArray()
-            val start = SystemClock.uptimeMillis()
-            val signed = Helper.signCleartextMessageArmored(key, password, message)
-            val elapsed = SystemClock.uptimeMillis() - start
-            Toast.makeText(
-                requireContext(), getString(R.string.operation_time, elapsed), Toast.LENGTH_SHORT
-            )
-                .show()
-            resultEditText.setText(signed)
-          } catch (e: Exception) {
-            requireActivity().showError(e.message)
+          lifecycleScope.launch {
+            try {
+              val message = messageEditText.text.toString()
+              val key = keyEditText.text.toString()
+              val password = passwordEditText.text.toString()
+                  .toByteArray()
+              val start = SystemClock.uptimeMillis()
+              val signed = Gopenpgp.signCleartextMessageArmored(key, password, message)
+              val elapsed = SystemClock.uptimeMillis() - start
+              Toast.makeText(
+                  requireContext(), getString(R.string.operation_time, elapsed), Toast.LENGTH_SHORT
+              )
+                  .show()
+              resultEditText.setText(signed)
+            } catch (e: Exception) {
+              requireActivity().showError(e.message)
+            }
           }
         }
 
     view.findViewById<Button>(R.id.button_verify)
         .setOnClickListener {
-          try {
-            val message = messageEditText.text.toString()
-            val key = keyEditText.text.toString()
-            val start = SystemClock.uptimeMillis()
-            val verified = Helper.verifyCleartextMessageArmored(key, message, Crypto.getUnixTime())
-            val elapsed = SystemClock.uptimeMillis() - start
-            Toast.makeText(
-                requireContext(), getString(R.string.operation_time, elapsed), Toast.LENGTH_SHORT
-            )
-                .show()
-            resultEditText.setText(verified)
-          } catch (e: Exception) {
-            requireActivity().showError(e.message)
+          lifecycleScope.launch {
+            try {
+              val message = messageEditText.text.toString()
+              val key = keyEditText.text.toString()
+              val start = SystemClock.uptimeMillis()
+              val verified =
+                Gopenpgp.verifyCleartextMessageArmored(key, message)
+              val elapsed = SystemClock.uptimeMillis() - start
+              Toast.makeText(
+                  requireContext(), getString(R.string.operation_time, elapsed), Toast.LENGTH_SHORT
+              )
+                  .show()
+              resultEditText.setText(verified)
+            } catch (e: Exception) {
+              requireActivity().showError(e.message)
+            }
           }
         }
   }

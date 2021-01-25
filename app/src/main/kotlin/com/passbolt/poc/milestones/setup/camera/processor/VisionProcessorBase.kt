@@ -25,15 +25,14 @@ abstract class VisionProcessorBase<T>(context: Context) {
     imageProxy: ImageProxy,
     graphicOverlay: GraphicOverlay
   ) {
-    val image = imageProxy.image ?: return
     if (isShutdown) {
       return
     }
 
     requestDetectInImage(
-        InputImage.fromMediaImage(image, imageProxy.imageInfo.rotationDegrees),
+        InputImage.fromMediaImage(imageProxy.image!!, imageProxy.imageInfo.rotationDegrees),
         graphicOverlay
-    ).addOnCompleteListener { image.close() }
+    ).addOnCompleteListener { imageProxy.close() }
   }
 
   private fun requestDetectInImage(

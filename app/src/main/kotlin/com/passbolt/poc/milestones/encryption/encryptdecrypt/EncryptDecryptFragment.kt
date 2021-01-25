@@ -7,10 +7,12 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import com.passbolt.poc.R
+import com.passbolt.poc.util.Gopenpgp
 import com.passbolt.poc.util.Keys
 import com.passbolt.poc.util.showError
-import helper.Helper
+import kotlinx.coroutines.launch
 
 class EncryptDecryptFragment : Fragment(R.layout.fragment_encrypt_decrypt) {
 
@@ -39,39 +41,43 @@ class EncryptDecryptFragment : Fragment(R.layout.fragment_encrypt_decrypt) {
 
     view.findViewById<Button>(R.id.button_encrypt)
         .setOnClickListener {
-          try {
-            val message = messageEditText.text.toString()
-            val key = keyEditText.text.toString()
-            val start = SystemClock.uptimeMillis()
-            val encrypted = Helper.encryptMessageArmored(key, message)
-            val elapsed = SystemClock.uptimeMillis() - start
-            Toast.makeText(
-                requireContext(), getString(R.string.operation_time, elapsed), Toast.LENGTH_SHORT
-            )
-                .show()
-            resultEditText.setText(encrypted)
-          } catch (e: Exception) {
-            requireActivity().showError(e.message)
+          lifecycleScope.launch {
+            try {
+              val message = messageEditText.text.toString()
+              val key = keyEditText.text.toString()
+              val start = SystemClock.uptimeMillis()
+              val encrypted = Gopenpgp.encryptMessageArmored(key, message)
+              val elapsed = SystemClock.uptimeMillis() - start
+              Toast.makeText(
+                  requireContext(), getString(R.string.operation_time, elapsed), Toast.LENGTH_SHORT
+              )
+                  .show()
+              resultEditText.setText(encrypted)
+            } catch (e: Exception) {
+              requireActivity().showError(e.message)
+            }
           }
         }
 
     view.findViewById<Button>(R.id.button_decrypt)
         .setOnClickListener {
-          try {
-            val message = messageEditText.text.toString()
-            val key = keyEditText.text.toString()
-            val password = passwordEditText.text.toString()
-                .toByteArray()
-            val start = SystemClock.uptimeMillis()
-            val decrypted = Helper.decryptMessageArmored(key, password, message)
-            val elapsed = SystemClock.uptimeMillis() - start
-            Toast.makeText(
-                requireContext(), getString(R.string.operation_time, elapsed), Toast.LENGTH_SHORT
-            )
-                .show()
-            resultEditText.setText(decrypted)
-          } catch (e: Exception) {
-            requireActivity().showError(e.message)
+          lifecycleScope.launch {
+            try {
+              val message = messageEditText.text.toString()
+              val key = keyEditText.text.toString()
+              val password = passwordEditText.text.toString()
+                  .toByteArray()
+              val start = SystemClock.uptimeMillis()
+              val decrypted = Gopenpgp.decryptMessageArmored(key, password, message)
+              val elapsed = SystemClock.uptimeMillis() - start
+              Toast.makeText(
+                  requireContext(), getString(R.string.operation_time, elapsed), Toast.LENGTH_SHORT
+              )
+                  .show()
+              resultEditText.setText(decrypted)
+            } catch (e: Exception) {
+              requireActivity().showError(e.message)
+            }
           }
         }
   }
