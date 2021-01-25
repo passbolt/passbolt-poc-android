@@ -24,7 +24,7 @@ before_script:
   image:
     name: gitlab.polidea.com:4567/runners/android:jdk11
   tags:
-    - asimov
+    - android_asimov
   script:
     - bundle check || bundle install --path=/cache
     - bundle exec fastlane lint_debug
@@ -39,7 +39,7 @@ before_script:
   image:
     name: gitlab.polidea.com:4567/runners/android:jdk11
   tags:
-    - asimov
+    - android_asimov
   script:
     - bundle check || bundle install --path=/cache
     - bundle exec fastlane detekt
@@ -53,7 +53,7 @@ before_script:
   image:
     name: gitlab.polidea.com:4567/runners/android:jdk11
   tags:
-    - asimov
+    - android_asimov
   script:
     - bundle check || bundle install --path=/cache
     - bundle exec fastlane build_debug
@@ -68,7 +68,7 @@ before_script:
   image:
     name: gitlab.polidea.com:4567/runners/android:jdk11
   tags:
-    - asimov
+    - android_asimov
   script:
     - bundle check || bundle install --path=/cache
     - bundle exec fastlane unit_tests_debug
@@ -89,7 +89,7 @@ before_script:
   image:
     name: gitlab.polidea.com:4567/runners/android:jdk11
   tags:
-    - asimov
+    - android_asimov
   before_script:
     # Wait for the emulator to start
     - adb connect android-emulator:5555
@@ -113,7 +113,7 @@ before_script:
   image:
     name: gitlab.polidea.com:4567/runners/android:jdk11
   tags:
-    - asimov
+    - android_asimov
   only:
     - tags
   script:
@@ -125,7 +125,7 @@ before_script:
   image:
     name: gitlab.polidea.com:4567/runners/android:jdk11
   tags:
-    - asimov
+    - android_asimov
   script:
     - bundle check || bundle install --path=/cache
     - bundle exec fastlane owasp_dependency_check
@@ -148,7 +148,7 @@ before_script:
   image:
     name: gitlab.polidea.com:4567/runners/android:jdk11
   tags:
-    - asimov
+    - android_asimov
   only:
     - tags
   script:
